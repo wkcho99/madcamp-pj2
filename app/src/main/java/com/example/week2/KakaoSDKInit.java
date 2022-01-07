@@ -1,7 +1,8 @@
 package com.example.week2;
 
 import android.app.Application;
-import com.kakao.auth.KakaoSDK;
+
+import com.kakao.sdk.common.KakaoSdk;
 
 public class KakaoSDKInit extends Application {
 
@@ -18,7 +19,7 @@ public class KakaoSDKInit extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        KakaoSDK.init(new KakaoSDKAdapter());
+        KakaoSdk.init(this, getString(R.string.kakaoApi));
     }
 
     @Override

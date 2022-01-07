@@ -10,20 +10,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.kakao.auth.Session;
-import com.kakao.usermgmt.LoginButton;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
+
+import com.kakao.sdk.common.util.Utility;
+import com.kakao.sdk.user.UserApi;
+import com.kakao.sdk.user.UserApiClient;
+
 import org.json.JSONObject;
 import android.content.Intent;
 import android.util.Log;
-import com.kakao.auth.ApiErrorCode;
-import com.kakao.auth.ISessionCallback;
-import com.kakao.network.ErrorResult;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.MeV2ResponseCallback;
-import com.kakao.usermgmt.response.MeV2Response;
-import com.kakao.util.exception.KakaoException;
+
 import java.io.BufferedReader;
 
 import java.io.BufferedWriter;
@@ -46,12 +41,12 @@ import java.net.URL;
 
 public class LoginActivity extends Activity {
     private TextView tvData;
-    Button kakaoLogin,kakaoLogout;
-    LoginButton loginButton;
+    Button kakaoTalkLogin, kakaoAccountLogin, kakaoLogout;
+    Button loginButton;
     LinearLayout linearLayout;
-    private KaKaoCallBack kaKaoCallBack;
     String userId = "1";
     String userName = "조원경";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,32 +56,76 @@ public class LoginActivity extends Activity {
 
         linearLayout.bringToFront();
         linearLayout.setVisibility(View.INVISIBLE);
-
-        kaKaoCallBack = new KaKaoCallBack();
-        Session.getCurrentSession().addCallback(kaKaoCallBack);
-        Session.getCurrentSession().checkAndImplicitOpen();
         tvData = (TextView)findViewById(R.id.textView);
-        kakaoLogin.setOnClickListener(new View.OnClickListener() {
+        // Log.d("keyhash", Utility.INSTANCE.getKeyHash(this));
+
+
+        kakaoTalkLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"카카오 로그인 버튼 클릭!",Toast.LENGTH_SHORT).show();
-                loginButton.performClick();
-                new JSONTask().execute("http://172.10.5.68:443/post");
+                Toast.makeText(getApplicationContext(), "카카오톡 버튼 클릭!", Toast.LENGTH_SHORT).show();
+
+                if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(getBaseContext())) {
+                    UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, (oAuthToken, error) -> {
+                        if (error != null) {
+                            Log.e("TAG", "로그인 실패", error);
+                        } else if (oAuthToken != null) {
+                            Log.i("TAG", "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        return null;
+                    });
+                    //new JSONTask().execute("http://172.10.5.68:443/post");
+                }
+                else {
+                    UserApiClient.getInstance().loginWithKakaoAccount(LoginActivity.this, (token, loginError) -> {
+                        if(loginError != null){
+                            Log.e("TAG", "로그인 실패", loginError);
+                        } else{
+                            Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
+                        }
+                        return null;
+                    });
+                }
             }
         });
+
+        kakaoAccountLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "카카오계정 버튼 클릭!", Toast.LENGTH_SHORT).show();
+                UserApiClient.getInstance().loginWithKakaoAccount(getBaseContext(), (token, loginError) -> {
+                    if(loginError != null){
+                        Log.e("TAG", "로그인 실패", loginError);
+                    } else{
+                        Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    return null;
+                });
+            }
+        });
+
+
 
         kakaoLogout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "정상적으로 로그아웃되었습니다.", Toast.LENGTH_SHORT).show();
 
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                UserApiClient.getInstance().logout((error) -> {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return null;
                 });
             }
         });
@@ -95,7 +134,8 @@ public class LoginActivity extends Activity {
     private void viewInit(){
         linearLayout = findViewById(R.id.linearLayout);
         loginButton = findViewById(R.id.loginButton);
-        kakaoLogin = findViewById(R.id.kakaoLogin);
+        kakaoTalkLogin = findViewById(R.id.kakaoTalkLogin);
+        kakaoAccountLogin = findViewById(R.id.kakaoAccountLogin);
         kakaoLogout = findViewById(R.id.kakaoLogout);
     }
 
@@ -103,13 +143,6 @@ public class LoginActivity extends Activity {
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-    }
     public class JSONTask extends AsyncTask<String, String, String> {
 
         @Override
@@ -222,44 +255,5 @@ public class LoginActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Session.getCurrentSession().removeCallback(kaKaoCallBack);
-    }
-    private class KaKaoCallBack implements ISessionCallback{
-
-        LoginActivity loginActivity = new LoginActivity();
-
-        @Override
-        public void onSessionOpened() {
-            UserManagement.getInstance().me(new MeV2ResponseCallback() {
-                @Override
-                public void onFailure(ErrorResult errorResult) {
-                    int result = errorResult.getErrorCode();
-
-                    if (result == ApiErrorCode.CLIENT_ERROR_CODE) loginActivity.kakaoError("네트워크 연결이 불안정합니다. 다시 시도해 주세요.");
-                    else loginActivity.kakaoError("로그인 도중 오류가 발생했습니다.");
-                }
-
-                @Override
-                public void onSessionClosed(ErrorResult errorResult) {
-                    loginActivity.kakaoError("세션이 닫혔습니다. 다시 시도해 주세요.");
-                }
-
-                @Override
-                public void onSuccess(MeV2Response result) {
-                    Log.d("아이디 확인 : ",Long.toString(result.getId())); //닉네임
-                    //Log.d("이름 확인 : ",result.getKakaoAccount().getLegalName()); //이메일
-                    //Log.d("이미지 확인 : ",result.getThumbnailImagePath()); //프로필 사진
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-
-                }
-            });
-        }
-
-        @Override
-        public void onSessionOpenFailed (KakaoException e){
-            loginActivity.kakaoError("로그인 도중 오류가 발생했습니다. 인터넷 연결을 확인해주세요.");
-        }
     }
 }
