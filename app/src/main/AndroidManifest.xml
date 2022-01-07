@@ -15,8 +15,7 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakaoApi" />
-        <activity android:name=".LoginActivity"
-            android:exported="true">
+        <activity android:name="com.example.week2.LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +27,7 @@
                 <!--Redirect URI: "kakao{NATIVE_APP_KEY}://oauth"-->
                 <data
                     android:host="oauth"
-                    android:scheme="1fc54f00a5dcd2dc5cbc858b42c52dbb"/>
+                    android:scheme="kakao1fc54f00a5dcd2dc5cbc858b42c52dbb"/>
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"/>
