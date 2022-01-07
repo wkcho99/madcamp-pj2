@@ -1,7 +1,6 @@
 package com.example.week2;
 
 import android.app.Application;
-
 import com.kakao.sdk.common.KakaoSdk;
 
 public class KakaoSDKInit extends Application {

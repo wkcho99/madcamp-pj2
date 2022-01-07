@@ -11,10 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.kakao.sdk.common.util.Utility;
 import com.kakao.sdk.user.UserApi;
 import com.kakao.sdk.user.UserApiClient;
+import com.kakao.sdk.user.model.Account;
+import com.kakao.sdk.user.model.Profile;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Intent;
 import android.util.Log;
@@ -45,7 +49,7 @@ public class LoginActivity extends Activity {
     Button loginButton;
     LinearLayout linearLayout;
     String userId = "1";
-    String userName = "조원경";
+    String nickname = "조원경";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,6 @@ public class LoginActivity extends Activity {
         tvData = (TextView)findViewById(R.id.textView);
         // Log.d("keyhash", Utility.INSTANCE.getKeyHash(this));
 
-
         kakaoTalkLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +74,10 @@ public class LoginActivity extends Activity {
                             Log.e("TAG", "로그인 실패", error);
                         } else if (oAuthToken != null) {
                             Log.i("TAG", "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Log.i("before sending",userId);
+                            intent.putExtra("nickname", nickname);
                             startActivity(intent);
                             finish();
                         }
@@ -86,6 +92,8 @@ public class LoginActivity extends Activity {
                         } else{
                             Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Log.i("before sending",nickname);
+                            intent.putExtra("nickname", nickname);
                             startActivity(intent);
                             finish();
 
@@ -93,27 +101,10 @@ public class LoginActivity extends Activity {
                         return null;
                     });
                 }
+                setId();
+                new JSONTask().execute("http://172.10.5.68/post");
             }
         });
-
-        kakaoAccountLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "카카오계정 버튼 클릭!", Toast.LENGTH_SHORT).show();
-                UserApiClient.getInstance().loginWithKakaoAccount(getBaseContext(), (token, loginError) -> {
-                    if(loginError != null){
-                        Log.e("TAG", "로그인 실패", loginError);
-                    } else{
-                        Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    return null;
-                });
-            }
-        });
-
 
 
         kakaoLogout.setOnClickListener(new Button.OnClickListener() {
@@ -135,7 +126,6 @@ public class LoginActivity extends Activity {
         linearLayout = findViewById(R.id.linearLayout);
         loginButton = findViewById(R.id.loginButton);
         kakaoTalkLogin = findViewById(R.id.kakaoTalkLogin);
-        kakaoAccountLogin = findViewById(R.id.kakaoAccountLogin);
         kakaoLogout = findViewById(R.id.kakaoLogout);
     }
 
@@ -149,8 +139,8 @@ public class LoginActivity extends Activity {
         protected String doInBackground(String... urls) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("user_id", "1");
-                jsonObject.accumulate("name", "조원경");
+                jsonObject.accumulate("user_id", userId);
+                jsonObject.accumulate("name", nickname);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
@@ -159,6 +149,8 @@ public class LoginActivity extends Activity {
                     //URL url = new URL("http://172.10.5.68:443/users");
                     URL url = new URL(urls[0]);
                     con = (HttpURLConnection) url.openConnection();
+                    con.setReadTimeout(30000);
+                    con.setConnectTimeout(30000);
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Cache-Control", "no-cache");
                     con.setRequestProperty("Content-Type", "application/json");
@@ -172,12 +164,10 @@ public class LoginActivity extends Activity {
                     writer.write(jsonObject.toString());
                     writer.flush();
                     writer.close();
-
                     InputStream stream = con.getInputStream();
-
-                    reader = new BufferedReader(new InputStreamReader(stream));
-
-                    StringBuffer buffer = new StringBuffer();
+                    JsonObject BODY = new JsonObject();
+                            reader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuilder buffer = new StringBuilder();
 
                     String line = "";
                     while((line = reader.readLine()) != null){
@@ -214,6 +204,30 @@ public class LoginActivity extends Activity {
             super.onPostExecute(result);
             tvData.setText(result);
         }
+
+//        private void sendObject(){
+//            JSONObject jsonObject = new JSONObject();
+//            try{
+//                jsonObject.put("nation", mJsonNationEt.getText().toString());
+//                jsonObject.put("name", mJsonNameEt.getText().toString());
+//                jsonObject.put("address", mJsonAddressEt.getText().toString());
+//                jsonObject.put("age", mJsonAgeEt.getText().toString());
+//            }catch (JSONException e){
+//                e.printStackTrace();
+//            }
+//            receiveObject(jsonObject);
+//        }
+//        private void receiveObject(JSONObject data){
+//            try{
+//                    data.getString("nation"));
+//                data.getString("nation"));
+//                data.getString("address"));
+//                data.getString("age"));
+//            } catch (JSONException e){
+//                e.printStackTrace();
+//            }
+//        }
+
     }
 //    private void select_doProcess() {
 //
@@ -251,9 +265,27 @@ public class LoginActivity extends Activity {
 //            e.printStackTrace();
 //        }
 //    }
+protected void setId(){
+    UserApiClient.getInstance().me((user, throwable) -> {
+        if(throwable != null){
+            Log.e("tag", "사용자 정보 요청 실패" + throwable);
+        } else{
+            Account kakaoAccount = user.getKakaoAccount();
+            Log.i("getuserid",Long.toString(user.getId()));
+            userId = Long.toString(user.getId());
+            if(kakaoAccount != null){
+                Profile profile = kakaoAccount.getProfile();
+                Log.i("tag", profile.getNickname());
+                nickname = profile.getNickname();
+            }
+        }
 
+        return null;
+    });
+}
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
+
 }

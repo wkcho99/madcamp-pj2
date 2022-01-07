@@ -10,6 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -21,14 +24,26 @@ import com.kakao.sdk.user.model.Profile;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
+    String userId;
+    String nickname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setContentView(new GameView(this));
+        Intent intent = getIntent();
+        //Log.i("after sending",nickname);
+        nickname = intent.getStringExtra("nickname");
         setContentView(R.layout.activity_main);
-        Button logout = findViewById(R.id.button5);
-        TextView nickname = findViewById(R.id.nickname);
-
+        Button logout = findViewById(R.id.logout);
+        Button train = findViewById(R.id.train);
+        Button adventure = findViewById(R.id.adventure);
+        Button raid = findViewById(R.id.raid);
+        TrainActivity fragment1 = new TrainActivity();
+        AdventureActivity fragment2 = new AdventureActivity();
+        RaidActivity fragment3 = new RaidActivity();
+        TextView nick = findViewById(R.id.nickname);
+        nick.setText(nickname);
         logout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,22 +57,25 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-
-
-
-        UserApiClient.getInstance().me((user, throwable) -> {
-            if(throwable != null){
-                Log.e("tag", "사용자 정보 요청 실패" + throwable);
-            } else{
-                Account kakaoAccount = user.getKakaoAccount();
-                if(kakaoAccount != null){
-                    Profile profile = kakaoAccount.getProfile();
-                    Log.i("tag", profile.getNickname());
-                    nickname.setText(profile.getNickname());
-                }
+        raid.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "레이드 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main,fragment3);
+                //transaction.addToBackStack(null);
+                transaction.commit();
             }
-
-            return null;
+        });
+        adventure.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "어드벤처 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main,fragment2);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
         });
 
 
