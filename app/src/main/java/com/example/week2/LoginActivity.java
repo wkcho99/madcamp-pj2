@@ -71,7 +71,7 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"카카오 로그인 버튼 클릭!",Toast.LENGTH_SHORT).show();
                 loginButton.performClick();
-                new JSONTask().execute("http://172.10.5.68:443/post");
+                new JSONTask().execute("http://172.10.5.68:80/post");
             }
         });
 
@@ -123,7 +123,7 @@ public class LoginActivity extends Activity {
                 BufferedReader reader = null;
 
                 try{
-                    //URL url = new URL("http://172.10.5.68:443/users");
+                    //URL url = new URL("http://172.10.5.68:80/users");
                     URL url = new URL(urls[0]);
                     con = (HttpURLConnection) url.openConnection();
                     con.setRequestMethod("POST");
