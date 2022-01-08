@@ -1,14 +1,15 @@
 package com.example.week2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
     String user_id;
     String name;
     Pokemon poke;
     long coin;
 
-    public User(String user_id, String name, Pokemon poke, long coin, long hunt_reward) {
+    public User(String user_id, String name, Pokemon poke, long coin){
         this.user_id = user_id;
         this.name = name;
         this.poke = poke;

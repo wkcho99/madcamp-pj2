@@ -10,10 +10,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="2">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
+
 
             <ImageView
                 android:id="@+id/train_back"
@@ -29,6 +31,19 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="230dp"
                 app:srcCompat="@drawable/pokemon1" />
+
+            <TextView
+                android:id="@+id/lvup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="250dp"
+                android:fontFamily="@font/pokemon_font"
+                android:text="Level Up!"
+                android:textColor="@color/black"
+                android:textSize="8pt"
+                android:visibility="invisible" />
+
         </RelativeLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_list"

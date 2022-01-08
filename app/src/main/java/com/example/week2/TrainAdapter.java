@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHolder> {
     private ArrayList <Skill> mList;
     private Context context;
+    private User user;
     static private OnItemClickListener mListener = null;
     public TrainAdapter(Context context, ArrayList<Skill> list) {
         this.context = context;
@@ -41,7 +42,7 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
             super(view);
             this.name = view.findViewById(R.id.skill_name);
             this.level = view.findViewById(R.id.skill_level);
-            this.bt = view.findViewById(R.id.button);
+            this.bt = view.findViewById(R.id.skillcost);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -57,11 +58,14 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
             });
         }
     }
+    public void setmList(ArrayList<Skill> list){
+        this.mList = list;
+        notifyDataSetChanged();
+    }
     /* Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type
      * to represent an item. */
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.skill_list, viewGroup, false);
 
@@ -75,6 +79,7 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
         data = mList.get(position);
         viewholder.name.setText(data.getName());
         viewholder.level.setText("LV."+Integer.toString(data.getLevel()));
+        viewholder.bt.setText("cost: "+data.getSkillcoin()+"\n"+"power: "+data.getPower());
         Log.i("viewholder:",data.getName()+data.getLevel());
     }
     @Override
