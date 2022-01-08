@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity {
         levelview.setText("Lv."+level);
         coinview.setText(""+coin);
         expper = exp*100/(Math.pow(user.poke.level,2)*100);
-        expview.setText(""+expper);
+        expview.setText(""+expper+"%");
         nick.setText(nickname);
         logout.setOnClickListener(new Button.OnClickListener() {
             @Override
