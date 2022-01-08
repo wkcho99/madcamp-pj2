@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,27 +40,30 @@ public class TrainActivity extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private Context context;
+    User user;
+
     ImageView my_poke;
     ImageView train_back;
+    TextView lvup;
+    TextView skillcost;
     private TrainAdapter mAdapter;
     private ContentResolver contentResolver;
-    Skill skill1 = new Skill("몸통박치기",1.0,10,10);
-    Skill skill2 = new Skill("씨뿌리기",5.0,10,15);
-    Skill skill3 = new Skill("덩굴채찍",5.0,1,20);
-    Skill skill4 = new Skill("독가루",7.0,1,25);
-    Skill skill5 = new Skill("잎날가르기",11.0,1,40);
-    Skill skill6 = new Skill("수면가루",4.0,1,20);
-    Skill skill7 = new Skill("솔라빔",7.0,1,100);
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.train_activity, container, false);
+        user = (User) getArguments().getSerializable("user");
+        for(int i = 0; i<user.getPoke().getSkills().size();i++)
+        {
+            addrList.add(user.getPoke().getSkills().get(i));
+        }
+        Log.i("before information log","here");
+        Log.i("trainactivity info", user.getPoke().getSkills().get(1).getName());
         return root;
     }
     private void updateData(){
@@ -68,57 +72,13 @@ public class TrainActivity extends Fragment {
 //        skill1.setLevel(1);
 //        skill1.setPower(10);
 //        skill1.setName("몸통박치기");
-        addrList.add(skill1);
-        addrList.add(skill2);
-        addrList.add(skill3);
-        addrList.add(skill4);
-        addrList.add(skill5);
-        addrList.add(skill6);
-        addrList.add(skill7);
-        mAdapter.notifyDataSetChanged();
-//        String [] arrProjection = {
-//                ContactsContract.Contacts._ID,
-//                ContactsContract.Contacts.DISPLAY_NAME,
-//                ContactsContract.Contacts.PHOTO_ID
-//        };
-//        String[] arrPhoneProjection = {
-//                ContactsContract.CommonDataKinds.Phone.NUMBER
-//        };
-//        Cursor clsCursor=contentResolver.query(
-//                ContactsContract.Contacts.CONTENT_URI,
-//                arrProjection,
-//                ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1" ,
-//                null,
-//                "UPPER(" + ContactsContract.Contacts.DISPLAY_NAME + ") ASC");
-//        //if (clsCursor.moveToFirst()) {
-//        clsCursor.moveToNext();
-//        do{
-//            String contactId = clsCursor.getString(0);
-//            Cursor phoneCursor = contentResolver.query(
-//                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                    arrPhoneProjection,
-//                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
-//                    null, null
-//            );
-//            phoneCursor.moveToNext();
-//            String realnumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//            String phone = realnumber.replace("-","");
-//            phoneCursor.close();
-//            PhoneBook contactInfo = new PhoneBook(
-//                    Integer.toString(i),
-//                    clsCursor.getString(clsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
-//                    phone,
-//                    clsCursor.getLong(clsCursor.getColumnIndex(ContactsContract.Contacts.PHOTO_ID)),
-//                    clsCursor.getLong(clsCursor.getColumnIndex(ContactsContract.Contacts._ID))
-//            );
-//            Log.i("name",clsCursor.getString(clsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
-//            i++;
-//            addrList.add(contactInfo);
-//            mAdapter.notifyDataSetChanged();
-//        }while (clsCursor.moveToNext());
-//        //}
-//        clsCursor.close();
-        /* Notify to the adapter */
+        for(int i = 0; i<user.getPoke().getSkills().size();i++)
+        {
+            addrList.add(user.getPoke().getSkills().get(i));
+        }
+        Log.i("addrList info", addrList.get(1).getName());
+        mAdapter.setmList(addrList);
+        //mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -134,20 +94,20 @@ public class TrainActivity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         context = getActivity();
-        mAdapter = new TrainAdapter(context, addrList);
         contentResolver = getActivity().getContentResolver();
+        mAdapter = new TrainAdapter(context, addrList);
         final Animation skillupanim = AnimationUtils.loadAnimation(context,R.anim.skill_level_up);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = view.findViewById(R.id.recyclerview_list);
         my_poke = view.findViewById(R.id.train_poke);
         train_back = view.findViewById(R.id.train_back);
+        lvup = view.findViewById(R.id.lvup);
         my_poke.setImageResource(R.drawable.pokemon1);
         train_back.setImageResource(R.drawable.home);
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -158,22 +118,39 @@ public class TrainActivity extends Fragment {
             @Override
         public void onUpClick(View v, int position){
             Skill s = mAdapter.getItem(position);
-            int temp = s.getLevel();
-            temp++;
+            if(user.getCoin()<s.getSkillcoin()) {
+                Toast.makeText(view.getContext(), "코인이 부족합니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(Math.pow(position,2)>user.poke.getLevel()){
+                Toast.makeText(view.getContext(), "레벨이 부족합니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(s.getLevel() == 99){
+                Toast.makeText(view.getContext(), "최대 레벨입니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            user.setCoin(user.getCoin() - s.getSkillcoin());
+            user.getPoke().getSkills().get(position).setPower(s.getPower()+position);
+                Log.i("getlevel before",""+user.getPoke().getSkills().get(position).getLevel());
+            user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
+                user.getPoke().getSkills().get(position).setSkillcoin();
             //코인 양 체크
-
             //코인 감소
                 // 요구레벨 체크
             //맥스레벨 체크
-                Log.i("getlevel before",""+s.getLevel());
-            s.setLevel(temp);
-                Log.i("getlevel after",""+s.getLevel());
+                Log.i("getlevel after",""+user.getPoke().getSkills().get(position).getLevel());
             //powerup
             //exp++
              updateData();
+             mAdapter.setmList(addrList);
+             lvup.setVisibility(view.VISIBLE);
+             lvup.startAnimation(skillupanim);
              my_poke.startAnimation(skillupanim);
              mAdapter.notifyDataSetChanged();
+             lvup.setVisibility(view.INVISIBLE);
         }
+
         @Override
         public void onItemClick(View v, int position, View itemView){
             modal(v,position);

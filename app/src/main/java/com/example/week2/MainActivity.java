@@ -27,6 +27,10 @@ import kotlin.jvm.functions.Function1;
 public class MainActivity extends FragmentActivity {
     String userId;
     String nickname;
+    Long coin;
+    Integer level;
+    Long exp;
+    double expper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +39,31 @@ public class MainActivity extends FragmentActivity {
         //Log.i("after sending",nickname);
         nickname = intent.getStringExtra("nickname");
         setContentView(R.layout.activity_main);
-
+        User user = (User) intent.getSerializableExtra("user");
+        Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
+        coin = user.getCoin();
+        level = user.poke.getLevel();
+        exp = user.poke.getExp();
         Button logout = findViewById(R.id.logout);
         Button train = findViewById(R.id.train);
         Button adventure = findViewById(R.id.adventure);
         Button raid = findViewById(R.id.raid);
-
         TrainActivity fragment1 = new TrainActivity();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user",user);
+        fragment1.setArguments(bundle);
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
         TextView nick = findViewById(R.id.nickname);
+        TextView levelview = findViewById(R.id.level);
+        TextView coinview = findViewById(R.id.coin);
+        TextView expview = findViewById(R.id.exp);
+        levelview.setText("Lv."+level);
+        coinview.setText(""+coin);
+        expper = exp*100/(Math.pow(user.poke.level,2)*100);
+        expview.setText(""+expper);
         nick.setText(nickname);
         logout.setOnClickListener(new Button.OnClickListener() {
             @Override

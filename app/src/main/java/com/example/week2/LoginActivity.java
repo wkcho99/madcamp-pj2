@@ -3,6 +3,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -43,6 +44,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LoginActivity extends Activity {
     private TextView tvData;
@@ -50,15 +53,32 @@ public class LoginActivity extends Activity {
     Button loginButton;
     LinearLayout linearLayout;
     String userId = "1";
+    private ArrayList<Skill> addrList = new ArrayList<Skill>();
+    Skill skill1 = new Skill(1,"몸통박치기",1.0,1,10,0);
+    Skill skill2 = new Skill(2,"씨뿌리기",5.0,1,15,0);
+    Skill skill3 = new Skill(3,"덩굴채찍",5.0,1,20,0);
+    Skill skill4 = new Skill(4,"독가루",7.0,1,25,0);
+    Skill skill5 = new Skill(5,"잎날가르기",11.0,1,40,0);
+    Skill skill6 = new Skill(6,"수면가루",4.0,1,20,0);
+    Skill skill7 = new Skill(7,"솔라빔",7.0,1,100,0);
     String nickname = "조원경";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
         viewInit();
-
+        addrList.add(skill1);
+        addrList.add(skill2);
+        addrList.add(skill3);
+        addrList.add(skill4);
+        addrList.add(skill5);
+        addrList.add(skill6);
+        addrList.add(skill7);
+        for(int i = 0; i<addrList.size();i++){
+            addrList.get(i).setSkillcoin();
+        }
+        Pokemon poke = new Pokemon(1,10,1,"모부기",50,addrList);
+        User user = new User("1","조원경",poke,50000);
         linearLayout.bringToFront();
         linearLayout.setVisibility(View.INVISIBLE);
         tvData = (TextView)findViewById(R.id.textView);
@@ -77,11 +97,11 @@ public class LoginActivity extends Activity {
                             Log.i("TAG", "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            setId();
+                            //setId();
 
                             Log.i("before sending",userId);
-                            intent.putExtra("nickname", nickname);
-                            intent.putExtra("user_id", userId);
+                            intent.putExtra("user",user);
+                            Log.i("login user info",""+user.getName()+user.getPoke().getSkills().get(1).getName());
                             startActivity(intent);
                             finish();
                         }
@@ -95,10 +115,10 @@ public class LoginActivity extends Activity {
                             Log.e("TAG", "로그인 실패", loginError);
                         } else{
                             Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
-                            setId();
+                            //setId();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             Log.i("before sending",nickname);
-                            intent.putExtra("nickname", nickname);
+                            intent.putExtra("user",user);
                             startActivity(intent);
                             finish();
 
@@ -124,10 +144,8 @@ public class LoginActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "로그인 성공!", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        setId();
-//                        Log.i("before sending",nickname);
-//                        Log.i("after sending",nickname);
-                        intent.putExtra("nickname", nickname);
+                        //setId();
+                        intent.putExtra("user",user);
                         startActivity(intent);
                         finish();
                     }
@@ -178,6 +196,7 @@ public class LoginActivity extends Activity {
                 try{
                     //URL url = new URL("http://192.249.18.153/users");
                     URL url = new URL(urls[0]);
+
                     con = (HttpURLConnection) url.openConnection();
 //                    con.setReadTimeout(30000);
 //                    con.setConnectTimeout(30000);
@@ -188,7 +207,6 @@ public class LoginActivity extends Activity {
                     con.setDoOutput(true);
                     con.setDoInput(true);
                     con.connect();
-
                     OutputStream outStream = con.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
                     writer.write(jsonObject.toString());
@@ -203,26 +221,21 @@ public class LoginActivity extends Activity {
                         buffer.append(line);
                     }
                     Log.i("getdatafromserver",buffer.toString());
-//                    JSONObject json = new JSONObject(buffer.toString());
-//                    User user = new User();
-//                    user.setCoin(json.getLong("coin"));
-//                    JSONObject poke = jsonObject.getJSONObject("pokemon");
-//                    user.setUser_id(userId);
-//                    user.setName(nickname);
-                    //안받아오는 부분 채워야함
-//                    Pokemon pokemon = new Pokemon();
-//                    pokemon.setLevel(poke.getInt("level"));
-//                    pokemon.setId(poke.getInt("number");
-//                    pokemon.setExp(poke.getLong("exp"));
-//                    JSONArray skills = poke.getJSONArray("skills");
-//                    for(int i =0;i<skills.length();i++)
-//                    {
-//                        JSONObject sjson = skills.getJSONObject(i);
-//                        Skill skill = new Skill();
-//                        skill.setName(sjson.getString("name"));
-//                        skill.setCool(sjson.getDouble("cool"));
-//                        skill.setPower(sjson.getInt("power"));
-//                    }
+//                                JSONObject json = new JSONObject(buffer.toString());
+//            JSONObject poke = json.getJSONObject("pokemon");
+//            //안받아오는 부분 채워야함
+//            HashMap<Integer,String> pMap = Pokemon_List.map;
+//            ArrayList<Skill> skillset = new ArrayList<>();
+//            Pokemon pokemon = new Pokemon(poke.getInt("id"),poke.getInt("level"),poke.getInt("number"),pMap.get(poke.getInt("number")),poke.getLong("exp"),skillset);
+//            JSONArray skills = poke.getJSONArray("skills");
+//            for(int i =0;i<skills.length();i++)
+//            {
+//                JSONObject sjson = skills.getJSONObject(i);
+//                Skill skill = new Skill(sjson.getString("name"),sjson.getDouble("cool"),sjson.getInt("level"),sjson.getInt("power"));
+//                skillset.add(skill);
+//            }
+//            pokemon.setSkills(skillset);
+//            user = new User(userId,nickname,pokemon,json.getLong("coin"));
                     return buffer.toString();
 
                 } catch (MalformedURLException e){
@@ -247,7 +260,23 @@ public class LoginActivity extends Activity {
 
             return null;
         }
-
+//        protected void setObjects(StringBuffer buffer){
+//            JSONObject json = new JSONObject(buffer.toString());
+//            JSONObject poke = json.getJSONObject("pokemon");
+//            //안받아오는 부분 채워야함
+//            HashMap<Integer,String> pMap = Pokemon_List.map;
+//            ArrayList<Skill> skillset = new ArrayList<>();
+//            Pokemon pokemon = new Pokemon(poke.getInt("id"),poke.getInt("level"),poke.getInt("number"),pMap.get(poke.getInt("number")),poke.getLong("exp"),skillset);
+//            JSONArray skills = poke.getJSONArray("skills");
+//            for(int i =0;i<skills.length();i++)
+//            {
+//                JSONObject sjson = skills.getJSONObject(i);
+//                Skill skill = new Skill(sjson.getString("name"),sjson.getDouble("cool"),sjson.getInt("level"),sjson.getInt("power"));
+//                skillset.add(skill);
+//            }
+//            pokemon.setSkills(skillset);
+//            User user = new User(userId,nickname,pokemon,json.getLong("coin"));
+//        }
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);

@@ -1,17 +1,29 @@
 package com.example.week2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Pokemon{
-    int level;
+public class Pokemon implements Serializable {
     int id;
-    String name[] = new String[3];
+    int level;
+    int number;
+    String name;
     long exp;
     ArrayList<Skill> skills;
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
     long hunt_reward;
-    public Pokemon(int level, int id, String[] name, long exp, ArrayList<Skill> skills) {
+    public Pokemon(int id, int level, int number, String name, long exp, ArrayList<Skill> skills) {
         this.level = level;
         this.id = id;
+        this.number = number;
         this.name = name;
         this.exp = exp;
         this.skills = skills;
@@ -26,11 +38,11 @@ public class Pokemon{
         this.level = level;
     }
 
-    public String[] getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(String[] name) {
+    public void setName(String name) {
         this.name = name;
     }
 

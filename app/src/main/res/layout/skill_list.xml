@@ -42,8 +42,8 @@
 
     </LinearLayout>
     <Button
-        android:id="@+id/button"
-        android:layout_width="50dp"
+        android:id="@+id/skillcost"
+        android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"

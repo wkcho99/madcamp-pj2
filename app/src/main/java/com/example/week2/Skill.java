@@ -1,15 +1,37 @@
 package com.example.week2;
 
-public class Skill {
+import java.io.Serializable;
+
+public class Skill implements Serializable {
+    int id;
     String name;
     Double cool;
+    Integer skillcoin;
     int level;
 
-    public Skill(String name, Double cool, int level, int power) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getSkillcoin() {
+        return skillcoin;
+    }
+
+    public void setSkillcoin() {
+        this.skillcoin =(this.id%10)*this.level;
+    }
+
+    public Skill(int id, String name, Double cool, int level, int power, Integer skillcoin) {
+        this.id = id;
         this.name = name;
         this.cool = cool;
         this.level = level;
         this.power = power;
+        this.skillcoin = skillcoin;
     }
 
     public String getName() {
