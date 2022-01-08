@@ -28,6 +28,9 @@ android {
 }
 
 dependencies {
+    implementation('io.socket:socket.io-client:2.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
     implementation 'com.kakao.sdk:v2-user:2.8.4' //카카오 로그인
     implementation "com.kakao.sdk:v2-talk:2.8.4" // 친구, 메시지
     implementation 'com.android.support:design:27.1.0'

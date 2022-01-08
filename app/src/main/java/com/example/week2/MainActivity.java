@@ -31,6 +31,7 @@ public class MainActivity extends FragmentActivity {
     Integer level;
     Long exp;
     double expper;
+    SocketIO socketIO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +110,8 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
+        socketIO = new SocketIO(userId);
+        socketIO.connect();
 
     }
     @Override
@@ -125,5 +128,6 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         setResult(RESULT_OK);
         super.onDestroy();
+        socketIO.disconnect();
     }
 }
