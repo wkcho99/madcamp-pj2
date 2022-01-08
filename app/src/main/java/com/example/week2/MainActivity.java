@@ -35,13 +35,17 @@ public class MainActivity extends FragmentActivity {
         //Log.i("after sending",nickname);
         nickname = intent.getStringExtra("nickname");
         setContentView(R.layout.activity_main);
+
         Button logout = findViewById(R.id.logout);
         Button train = findViewById(R.id.train);
         Button adventure = findViewById(R.id.adventure);
         Button raid = findViewById(R.id.raid);
+
         TrainActivity fragment1 = new TrainActivity();
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_main,fragment1).commit();
         TextView nick = findViewById(R.id.nickname);
         nick.setText(nickname);
         logout.setOnClickListener(new Button.OnClickListener() {
@@ -57,13 +61,23 @@ public class MainActivity extends FragmentActivity {
                 });
             }
         });
+        train.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "트레인 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main,fragment1);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         raid.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "레이드 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main,fragment3);
-                //transaction.addToBackStack(null);
+                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });

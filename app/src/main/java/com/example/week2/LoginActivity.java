@@ -18,6 +18,7 @@ import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 import com.kakao.sdk.user.model.Profile;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Intent;
@@ -76,8 +77,11 @@ public class LoginActivity extends Activity {
                             Log.i("TAG", "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
 
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            setId();
+
                             Log.i("before sending",userId);
                             intent.putExtra("nickname", nickname);
+                            intent.putExtra("user_id", userId);
                             startActivity(intent);
                             finish();
                         }
@@ -91,6 +95,7 @@ public class LoginActivity extends Activity {
                             Log.e("TAG", "로그인 실패", loginError);
                         } else{
                             Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
+                            setId();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             Log.i("before sending",nickname);
                             intent.putExtra("nickname", nickname);
@@ -101,11 +106,35 @@ public class LoginActivity extends Activity {
                         return null;
                     });
                 }
-                setId();
-                new JSONTask().execute("http://172.10.5.68/post");
             }
         });
 
+        kakaoAccountLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "카카오계정 버튼 클릭!", Toast.LENGTH_SHORT).show();
+                UserApiClient.getInstance().loginWithKakaoAccount(getBaseContext(), (token, loginError) -> {
+                    //Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
+                    if(loginError != null){
+                        Toast.makeText(getApplicationContext(), "로그인 실패!", Toast.LENGTH_SHORT).show();
+                        Log.e("TAG", "로그인 실패", loginError);
+                    } else{
+                        Log.i("TAG", "로그인 성공(토큰) : " + token.getAccessToken());
+
+                        Toast.makeText(getApplicationContext(), "로그인 성공!", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        setId();
+//                        Log.i("before sending",nickname);
+//                        Log.i("after sending",nickname);
+                        intent.putExtra("nickname", nickname);
+                        startActivity(intent);
+                        finish();
+                    }
+                    return null;
+                });
+            }
+        });
 
         kakaoLogout.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -126,6 +155,7 @@ public class LoginActivity extends Activity {
         linearLayout = findViewById(R.id.linearLayout);
         loginButton = findViewById(R.id.loginButton);
         kakaoTalkLogin = findViewById(R.id.kakaoTalkLogin);
+        kakaoAccountLogin = findViewById(R.id.kakaoAccountLogin);
         kakaoLogout = findViewById(R.id.kakaoLogout);
     }
 
@@ -140,17 +170,17 @@ public class LoginActivity extends Activity {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.accumulate("user_id", userId);
-                jsonObject.accumulate("name", nickname);
+                //jsonObject.accumulate("name", nickname);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
 
                 try{
-                    //URL url = new URL("http://172.10.5.68:443/users");
+                    //URL url = new URL("http://192.249.18.153/users");
                     URL url = new URL(urls[0]);
                     con = (HttpURLConnection) url.openConnection();
-                    con.setReadTimeout(30000);
-                    con.setConnectTimeout(30000);
+//                    con.setReadTimeout(30000);
+//                    con.setConnectTimeout(30000);
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Cache-Control", "no-cache");
                     con.setRequestProperty("Content-Type", "application/json");
@@ -165,15 +195,34 @@ public class LoginActivity extends Activity {
                     writer.flush();
                     writer.close();
                     InputStream stream = con.getInputStream();
-                    JsonObject BODY = new JsonObject();
-                            reader = new BufferedReader(new InputStreamReader(stream));
-                    StringBuilder buffer = new StringBuilder();
+                    reader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuffer buffer = new StringBuffer();
 
                     String line = "";
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     }
-
+                    Log.i("getdatafromserver",buffer.toString());
+//                    JSONObject json = new JSONObject(buffer.toString());
+//                    User user = new User();
+//                    user.setCoin(json.getLong("coin"));
+//                    JSONObject poke = jsonObject.getJSONObject("pokemon");
+//                    user.setUser_id(userId);
+//                    user.setName(nickname);
+                    //안받아오는 부분 채워야함
+//                    Pokemon pokemon = new Pokemon();
+//                    pokemon.setLevel(poke.getInt("level"));
+//                    pokemon.setId(poke.getInt("number");
+//                    pokemon.setExp(poke.getLong("exp"));
+//                    JSONArray skills = poke.getJSONArray("skills");
+//                    for(int i =0;i<skills.length();i++)
+//                    {
+//                        JSONObject sjson = skills.getJSONObject(i);
+//                        Skill skill = new Skill();
+//                        skill.setName(sjson.getString("name"));
+//                        skill.setCool(sjson.getDouble("cool"));
+//                        skill.setPower(sjson.getInt("power"));
+//                    }
                     return buffer.toString();
 
                 } catch (MalformedURLException e){
@@ -273,6 +322,7 @@ protected void setId(){
             Account kakaoAccount = user.getKakaoAccount();
             Log.i("getuserid",Long.toString(user.getId()));
             userId = Long.toString(user.getId());
+            new JSONTask().execute("http://192.249.18.153/post");
             if(kakaoAccount != null){
                 Profile profile = kakaoAccount.getProfile();
                 Log.i("tag", profile.getNickname());
@@ -282,6 +332,7 @@ protected void setId(){
 
         return null;
     });
+
 }
     @Override
     protected void onDestroy() {

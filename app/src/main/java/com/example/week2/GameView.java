@@ -44,7 +44,6 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         //캔버스를 검정색으로 두자
         canvas.drawColor(Color.BLACK);
 
