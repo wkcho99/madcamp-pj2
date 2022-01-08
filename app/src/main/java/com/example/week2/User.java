@@ -48,4 +48,13 @@ public class User implements Serializable {
         this.coin = coin;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id='" + user_id + '\'' +
+                ", name='" + name + '\'' +
+                ", poke=" + poke +
+                ", coin=" + coin +
+                '}';
+    }
 }

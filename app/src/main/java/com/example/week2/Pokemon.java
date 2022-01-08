@@ -8,7 +8,7 @@ public class Pokemon implements Serializable {
     int level;
     int number;
     String name;
-    long exp;
+    double exp;
     ArrayList<Skill> skills;
 
     public int getNumber() {
@@ -20,7 +20,7 @@ public class Pokemon implements Serializable {
     }
 
     long hunt_reward;
-    public Pokemon(int id, int level, int number, String name, long exp, ArrayList<Skill> skills) {
+    public Pokemon(int id, int level, int number, String name, double exp, ArrayList<Skill> skills) {
         this.level = level;
         this.id = id;
         this.number = number;
@@ -46,7 +46,7 @@ public class Pokemon implements Serializable {
         this.name = name;
     }
 
-    public long getExp() {
+    public double getExp() {
         return exp;
     }
 
@@ -76,5 +76,18 @@ public class Pokemon implements Serializable {
 
     public void setHunt_reward(long hunt_reward) {
         this.hunt_reward = hunt_reward;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                "id=" + id +
+                ", level=" + level +
+                ", number=" + number +
+                ", name='" + name + '\'' +
+                ", exp=" + exp +
+                ", skills=" + skills +
+                ", hunt_reward=" + hunt_reward +
+                '}';
     }
 }

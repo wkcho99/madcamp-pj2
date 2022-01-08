@@ -1,6 +1,7 @@
 package com.example.week2;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,51 +22,64 @@ import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 import com.kakao.sdk.user.model.Profile;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends FragmentActivity {
-    String userId;
-    String nickname;
     Long coin;
     Integer level;
-    Long exp;
+    double exp;
     double expper;
-    SocketIO socketIO;
+    User user;
+    SocketClient socketClient;
+
+    TextView nick;
+    TextView levelview;
+    TextView coinview;
+    TextView expview;
+
+    Button logout, train, adventure, raid;
+
+    TrainActivity fragment1;
+    AdventureActivity fragment2;
+    RaidActivity fragment3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(new GameView(this));
-        Intent intent = getIntent();
-        //Log.i("after sending",nickname);
-        nickname = intent.getStringExtra("nickname");
+        socketClient = (SocketClient) getApplicationContext();
+
         setContentView(R.layout.activity_main);
-        User user = (User) intent.getSerializableExtra("user");
-        Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
-        coin = user.getCoin();
-        level = user.poke.getLevel();
-        exp = user.poke.getExp();
-        Button logout = findViewById(R.id.logout);
-        Button train = findViewById(R.id.train);
-        Button adventure = findViewById(R.id.adventure);
-        Button raid = findViewById(R.id.raid);
-        TrainActivity fragment1 = new TrainActivity();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user",user);
-        fragment1.setArguments(bundle);
-        AdventureActivity fragment2 = new AdventureActivity();
-        RaidActivity fragment3 = new RaidActivity();
+        user = socketClient.getUser();
+
+
+        logout = findViewById(R.id.logout);
+        train = findViewById(R.id.train);
+        adventure = findViewById(R.id.adventure);
+        raid = findViewById(R.id.raid);
+        nick = findViewById(R.id.nickname);
+        levelview = findViewById(R.id.level);
+        coinview = findViewById(R.id.coin);
+        expview = findViewById(R.id.exp);
+
+        fragment1 = new TrainActivity();
+        fragment2 = new AdventureActivity();
+        fragment3 = new RaidActivity();
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
-        TextView nick = findViewById(R.id.nickname);
-        TextView levelview = findViewById(R.id.level);
-        TextView coinview = findViewById(R.id.coin);
-        TextView expview = findViewById(R.id.exp);
-        levelview.setText("Lv."+level);
-        coinview.setText(""+coin);
-        expper = exp*100/(Math.pow(user.poke.level,2)*100);
-        expview.setText(""+expper+"%");
-        nick.setText(nickname);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         logout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,10 +124,27 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        socketIO = new SocketIO(userId);
-        socketIO.connect();
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        coin = user.getCoin();
+        level = user.poke.getLevel();
+        exp = user.poke.getExp();
+
+        levelview.setText("Lv."+level);
+        coinview.setText(""+coin);
+        expper = exp*100/(Math.pow(user.poke.level,2)*100);
+        expview.setText(""+expper+"%");
+        nick.setText(user.getName());
+
+    }
+
+
+
     @Override
     protected void onStop() {
         setResult(RESULT_OK);
@@ -128,6 +159,5 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         setResult(RESULT_OK);
         super.onDestroy();
-        socketIO.disconnect();
     }
 }

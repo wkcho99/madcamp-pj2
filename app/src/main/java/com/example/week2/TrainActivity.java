@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class TrainActivity extends Fragment {
@@ -41,44 +42,43 @@ public class TrainActivity extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private Context context;
     User user;
+    SocketClient socketClient;
 
     ImageView my_poke;
     ImageView train_back;
     TextView lvup;
-    TextView skillcost;
     private TrainAdapter mAdapter;
     private ContentResolver contentResolver;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        socketClient = (SocketClient) getActivity().getApplicationContext();
     }
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.train_activity, container, false);
-        user = (User) getArguments().getSerializable("user");
+        user = socketClient.getUser();
         for(int i = 0; i<user.getPoke().getSkills().size();i++)
         {
             addrList.add(user.getPoke().getSkills().get(i));
         }
-        Log.i("before information log","here");
-        Log.i("trainactivity info", user.getPoke().getSkills().get(1).getName());
+//        Log.i("before information log","here");
+//        Log.i("trainactivity info", user.getPoke().getSkills().get(1).getName());
         return root;
     }
     private void updateData(){
         addrList.clear();
-//        skill1.setCool(5.0f);
-//        skill1.setLevel(1);
-//        skill1.setPower(10);
-//        skill1.setName("몸통박치기");
         for(int i = 0; i<user.getPoke().getSkills().size();i++)
         {
             addrList.add(user.getPoke().getSkills().get(i));
         }
-        Log.i("addrList info", addrList.get(1).getName());
+        //Log.i("addrList info", addrList.get(1).getName());
         mAdapter.setmList(addrList);
-        //mAdapter.notifyDataSetChanged();
+        socketClient.notifySkillChange();
+        TextView view = getActivity().findViewById(R.id.coin);
+        view.setText(""+user.getCoin());
     }
 
     @Override
@@ -162,11 +162,6 @@ public class TrainActivity extends Fragment {
         String msg;
         Skill s = mAdapter.getItem(position);
         msg = s.getName();
-//        if (pay) {
-//            msg = "주문을 접수 하시겠습니까?";
-//        } else {
-//            msg = "본 주문은 무통장 입금 주문입니다.\n입금 확인이 되었다면 확인 버튼을 눌러주세요.";
-//        }
 
         new AlertDialog.Builder(view.getContext())
                 .setTitle("스킬 정보")
@@ -176,21 +171,7 @@ public class TrainActivity extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
-                        //((Activity) view.getContext()).finish();
                     }
                 }).show();
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        Toast.makeText(view.getContext(), "코인을 결제하시겠습니까?", Toast.LENGTH_SHORT).show();
-//                        //((Activity) view.getContext()).finish();
-//                    }
-//                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                Toast.makeText(view.getContext(), "코인이 부족합니다.", Toast.LENGTH_SHORT).show();
-//
-//            }
     }
 }

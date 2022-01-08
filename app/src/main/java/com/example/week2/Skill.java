@@ -8,6 +8,7 @@ public class Skill implements Serializable {
     Double cool;
     Integer skillcoin;
     int level;
+    int power;
 
     public int getId() {
         return id;
@@ -25,13 +26,14 @@ public class Skill implements Serializable {
         this.skillcoin =(this.id%10)*this.level;
     }
 
-    public Skill(int id, String name, Double cool, int level, int power, Integer skillcoin) {
+    public Skill(int id, String name, Double cool, int level, int power) {
         this.id = id;
         this.name = name;
         this.cool = cool;
         this.level = level;
         this.power = power;
-        this.skillcoin = skillcoin;
+        this.skillcoin = 0;
+        setSkillcoin();
     }
 
     public String getName() {
@@ -66,5 +68,14 @@ public class Skill implements Serializable {
         this.power = power;
     }
 
-    int power;
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cool=" + cool +
+                ", skillcoin=" + skillcoin +
+                ", level=" + level +
+                '}';
+    }
 }
