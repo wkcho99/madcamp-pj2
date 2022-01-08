@@ -55,6 +55,7 @@ public class MainActivity extends FragmentActivity {
         socketClient = (SocketClient) getApplicationContext();
 
         setContentView(R.layout.activity_main);
+
         user = socketClient.getUser();
 
 
@@ -70,6 +71,23 @@ public class MainActivity extends FragmentActivity {
         fragment1 = new TrainActivity();
         fragment2 = new AdventureActivity();
         fragment3 = new RaidActivity();
+
+
+        Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
+
+        logout = findViewById(R.id.logout);
+        train = findViewById(R.id.train);
+        adventure = findViewById(R.id.adventure);
+        raid = findViewById(R.id.raid);
+
+        TrainActivity fragment1 = new TrainActivity();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user",user);
+
+        AdventureActivity fragment2 = new AdventureActivity();
+        RaidActivity fragment3 = new RaidActivity();
+        fragment2.setArguments(bundle);
+        fragment3.setArguments(bundle);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();

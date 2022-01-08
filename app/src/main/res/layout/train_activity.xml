@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/home" />
+                android:src="@drawable/home" />
 
             <ImageView
                 android:id="@+id/train_poke"
@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="230dp"
-                app:srcCompat="@drawable/pokemon1" />
+                android:src="@drawable/pokemon1" />
 
             <TextView
                 android:id="@+id/lvup"
