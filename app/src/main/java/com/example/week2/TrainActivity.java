@@ -131,15 +131,16 @@ public class TrainActivity extends Fragment {
                 return;
             }
             user.setCoin(user.getCoin() - s.getSkillcoin());
-            user.getPoke().getSkills().get(position).setPower(s.getPower()+position);
-                Log.i("getlevel before",""+user.getPoke().getSkills().get(position).getLevel());
+
+                Log.i("getlevel before",""+user.getPoke().getSkills().get(position).getPower());
+                user.getPoke().getSkills().get(position).setPower(s.getPower()+position+1);
             user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
                 user.getPoke().getSkills().get(position).setSkillcoin();
             //코인 양 체크
             //코인 감소
                 // 요구레벨 체크
             //맥스레벨 체크
-                Log.i("getlevel after",""+user.getPoke().getSkills().get(position).getLevel());
+                Log.i("getlevel after",""+user.getPoke().getSkills().get(position).getPower());
             //powerup
             //exp++
              updateData();

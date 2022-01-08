@@ -51,6 +51,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="5dp"
         android:text="100Gold"
+        android:textSize="6pt"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
