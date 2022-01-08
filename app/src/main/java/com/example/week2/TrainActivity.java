@@ -103,8 +103,8 @@ public class TrainActivity extends Fragment {
         my_poke = view.findViewById(R.id.train_poke);
         train_back = view.findViewById(R.id.train_back);
         lvup = view.findViewById(R.id.lvup);
-        my_poke.setImageResource(R.drawable.pokemon1);
-        train_back.setImageResource(R.drawable.home);
+        //my_poke.setImageResource(R.drawable.pokemon1);
+        //train_back.setImageResource(R.drawable.home);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);

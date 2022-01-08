@@ -54,6 +54,8 @@ public class MainActivity extends FragmentActivity {
         fragment1.setArguments(bundle);
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
+        fragment2.setArguments(bundle);
+        fragment3.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
         TextView nick = findViewById(R.id.nickname);
