@@ -3,26 +3,16 @@ package com.example.week2;
 import java.util.ArrayList;
 
 public class User {
-    String id;
     String user_id;
     String name;
     Pokemon poke;
     long coin;
 
-    public User(String id, String user_id, String name, Pokemon poke, long coin, long hunt_reward) {
-        this.id = id;
+    public User(String user_id, String name, Pokemon poke, long coin, long hunt_reward) {
         this.user_id = user_id;
         this.name = name;
         this.poke = poke;
         this.coin = coin;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUser_id() {

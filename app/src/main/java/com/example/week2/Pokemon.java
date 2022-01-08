@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 public class Pokemon{
     int level;
+    int id;
     String name[] = new String[3];
     long exp;
     ArrayList<Skill> skills;
     long hunt_reward;
-    public Pokemon(int level, String[] name, long exp, ArrayList<Skill> skills) {
+    public Pokemon(int level, int id, String[] name, long exp, ArrayList<Skill> skills) {
         this.level = level;
+        this.id = id;
         this.name = name;
         this.exp = exp;
         this.skills = skills;
@@ -46,6 +48,14 @@ public class Pokemon{
 
     public void setSkills(ArrayList<Skill> skills) {
         this.skills = skills;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public long getHunt_reward() {

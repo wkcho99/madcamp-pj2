@@ -18,7 +18,10 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,15 +39,17 @@ public class TrainActivity extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private Context context;
+    ImageView my_poke;
+    ImageView train_back;
     private TrainAdapter mAdapter;
     private ContentResolver contentResolver;
-    Skill skill1 = new Skill("몸통박치기",1.0f,10,10);
-    Skill skill2 = new Skill("씨뿌리기",5.0f,10,15);
-    Skill skill3 = new Skill("덩굴채찍",5.0f,1,20);
-    Skill skill4 = new Skill("독가루",7.0f,1,25);
-    Skill skill5 = new Skill("잎날가르기",11.0f,1,40);
-    Skill skill6 = new Skill("수면가루",4.0f,1,20);
-    Skill skill7 = new Skill("솔라빔",7.0f,1,100);
+    Skill skill1 = new Skill("몸통박치기",1.0,10,10);
+    Skill skill2 = new Skill("씨뿌리기",5.0,10,15);
+    Skill skill3 = new Skill("덩굴채찍",5.0,1,20);
+    Skill skill4 = new Skill("독가루",7.0,1,25);
+    Skill skill5 = new Skill("잎날가르기",11.0,1,40);
+    Skill skill6 = new Skill("수면가루",4.0,1,20);
+    Skill skill7 = new Skill("솔라빔",7.0,1,100);
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,9 +138,13 @@ public class TrainActivity extends Fragment {
         context = getActivity();
         mAdapter = new TrainAdapter(context, addrList);
         contentResolver = getActivity().getContentResolver();
-
+        final Animation skillupanim = AnimationUtils.loadAnimation(context,R.anim.skill_level_up);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = view.findViewById(R.id.recyclerview_list);
+        my_poke = view.findViewById(R.id.train_poke);
+        train_back = view.findViewById(R.id.train_back);
+        my_poke.setImageResource(R.drawable.pokemon1);
+        train_back.setImageResource(R.drawable.home);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -162,6 +171,7 @@ public class TrainActivity extends Fragment {
             //powerup
             //exp++
              updateData();
+             my_poke.startAnimation(skillupanim);
              mAdapter.notifyDataSetChanged();
         }
         @Override

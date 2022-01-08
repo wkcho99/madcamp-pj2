@@ -2,10 +2,10 @@ package com.example.week2;
 
 public class Skill {
     String name;
-    Float cool;
+    Double cool;
     int level;
 
-    public Skill(String name, Float cool, int level, int power) {
+    public Skill(String name, Double cool, int level, int power) {
         this.name = name;
         this.cool = cool;
         this.level = level;
@@ -20,11 +20,11 @@ public class Skill {
         this.name = name;
     }
 
-    public Float getCool() {
+    public Double getCool() {
         return cool;
     }
 
-    public void setCool(Float cool) {
+    public void setCool(Double cool) {
         this.cool = cool;
     }
 
