@@ -1,44 +1,65 @@
-const express = require('express');
-const mysql   = require('mysql');
 require('dotenv').config();
 
-const app = express();
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
+const mysql   = require('mysql');
 const connection = mysql.createConnection({
   host     : 'localhost',
   user     : process.env.DBUSER,
   password : process.env.DBPASS,
   database : process.env.DBNAME
 });
+const port = 8090;
+
+io.on('connection', (socket) => {
+	console.log("user connect");
+	
+	socket.on("userInfo", obj => {
+		console.log(obj.user_id)
+		login(obj.user_id, socket);
+	})
+	
+	socket.on('disconnect', () => {
+		console.log('user disconnect')
+	});
+})
+
+server.listen(port, function(){
+	console.log(`server open at port ${port}`);
+})
+
 
 app.get("/", (req, res) => {
   res.send("OK");
+
 })
- 
- app.post('/post', (req, res) => {
 
-  console.log("post");
 
-   var inputData;
-   var loginResult = {};
-   var userInfo = {};
-   var pokemonInfo = {};
+// 유저가 kakao id를 보낼 때
+function login(user_id, socket){
+	
+  	var loginResult = {};
+  	var userInfo = {};
+  	var pokemonInfo = {};
 
-   var pokemon_id;
-  
-   req.on('data', (data) => { inputData = JSON.parse(data);}); 
-   req.on('end', () => {
+  	var pokemon_id;
+	  
      
-     connection.query(`SELECT coin, pokemon_id from users WHERE kakao_id='${inputData.user_id}'`,
+     connection.query(`SELECT * from users WHERE kakao_id='${user_id}'`,
      (_, userRow, __) => {
        
-        
         if(userRow.length > 0){
           userInfo["coin"] = userRow[0].coin;
+		  userInfo["name"] = userRow[0].name;
           pokemon_id = userRow[0].pokemon_id;
         
           connection.query(`SELECT * from pokemon WHERE id='${pokemon_id}'`, 
           (_, pkmRow, __) => {
 
+			pokemonInfo["id"] = pkmRow[0].id;
             pokemonInfo["level"] = pkmRow[0].level;
             pokemonInfo["number"] = pkmRow[0].number;
             pokemonInfo["exp"] = pkmRow[0].exp;
@@ -51,6 +72,7 @@ app.get("/", (req, res) => {
 
               skillRow.forEach((elem, idx) => {
                 skillInfo = {}
+				skillInfo["id"] = elem.id;
                 skillInfo["name"] = elem.name;
                 skillInfo["cool"] = elem.cool;
                 skillInfo["power"] = elem.power;
@@ -60,25 +82,11 @@ app.get("/", (req, res) => {
 
               pokemonInfo["skills"] = skillInfoes;
               userInfo["pokemon"] = pokemonInfo;
-
-              res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-              res.write(JSON.stringify(userInfo));
-              console.log(JSON.stringify(userInfo));
-              res.end();
+				
+			  socket.emit("userInfo", userInfo);
             });
           });
         }
 
-     });
-     
-
-   });
-
-
-
- });
- 
-app.listen(80, () => {
-  console.log('Example app listening on port 80!');
-});
- 
+	});
+}
