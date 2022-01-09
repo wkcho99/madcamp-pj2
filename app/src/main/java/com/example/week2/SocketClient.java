@@ -41,7 +41,7 @@ public class SocketClient extends Application {
         super.onCreate();
         instance = this;
         KakaoSdk.init(this, getString(R.string.kakaoApi));
-
+        user = new User(null, null, null, 0);
 
         try {
             mSocket = IO.socket(getString(R.string.serverAddr));
@@ -66,7 +66,6 @@ public class SocketClient extends Application {
             }
         });
 
-        mSocket.connect();
     }
 
     private Pokemon parsePokemon(JSONObject obj) throws JSONException {
@@ -80,7 +79,7 @@ public class SocketClient extends Application {
         }
 
         return new Pokemon(obj.getInt("id"), obj.getInt("level"),
-                number, pokemon_list.get(number), obj.getDouble("exp"), skills);
+                number, pokemon_list.get(number), obj.getLong("exp"), skills);
     }
 
     public void setUser(User user) {
@@ -103,6 +102,7 @@ public class SocketClient extends Application {
     }
 
     public void requestUserInfo(String kakaoId){
+        mSocket.connect();
         try {
             user = new User(kakaoId, null, null, 0);
             mSocket.emit("userInfo", new JSONObject("{\"user_id\":\""+kakaoId+"\"}"));
@@ -111,9 +111,20 @@ public class SocketClient extends Application {
         }
     }
 
-    public void notifySkillChange(){
-        Log.i("socket", user.toString());
+    public void notifyChange(){
+        try {
+            JSONObject obj = new JSONObject(user.toString());
+            //Log.i("socketIO change", String.valueOf(obj));
 
+            mSocket.emit("change", obj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void disconnect(){
+        mSocket.disconnect();
     }
 
 }

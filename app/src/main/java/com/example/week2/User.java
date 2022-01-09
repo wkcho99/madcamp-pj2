@@ -1,5 +1,7 @@
 package com.example.week2;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -50,11 +52,12 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "{" +
                 "user_id='" + user_id + '\'' +
                 ", name='" + name + '\'' +
                 ", poke=" + poke +
                 ", coin=" + coin +
                 '}';
     }
+
 }

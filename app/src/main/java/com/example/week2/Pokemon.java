@@ -1,5 +1,8 @@
 package com.example.week2;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -8,7 +11,7 @@ public class Pokemon implements Serializable {
     int level;
     int number;
     String name;
-    double exp;
+    long exp;
     ArrayList<Skill> skills;
 
     public int getNumber() {
@@ -20,7 +23,7 @@ public class Pokemon implements Serializable {
     }
 
     long hunt_reward;
-    public Pokemon(int id, int level, int number, String name, double exp, ArrayList<Skill> skills) {
+    public Pokemon(int id, int level, int number, String name, long exp, ArrayList<Skill> skills) {
         this.level = level;
         this.id = id;
         this.number = number;
@@ -46,7 +49,7 @@ public class Pokemon implements Serializable {
         this.name = name;
     }
 
-    public double getExp() {
+    public long getExp() {
         return exp;
     }
 
@@ -80,7 +83,7 @@ public class Pokemon implements Serializable {
 
     @Override
     public String toString() {
-        return "Pokemon{" +
+        return "{" +
                 "id=" + id +
                 ", level=" + level +
                 ", number=" + number +
@@ -89,5 +92,9 @@ public class Pokemon implements Serializable {
                 ", skills=" + skills +
                 ", hunt_reward=" + hunt_reward +
                 '}';
+    }
+
+    public JSONObject toJson() throws JSONException {
+        return new JSONObject(this.toString());
     }
 }

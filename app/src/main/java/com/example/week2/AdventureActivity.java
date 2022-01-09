@@ -25,8 +25,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
 public class AdventureActivity extends Fragment {
@@ -38,11 +36,14 @@ public class AdventureActivity extends Fragment {
     private AdventureAdapter mAdapter;
     private ContentResolver contentResolver;
     private AnimationDrawable animationDrawable;
+    SocketClient socketClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contentResolver = getActivity().getContentResolver();
+        socketClient = (SocketClient) getActivity().getApplicationContext();
+        user = socketClient.getUser();
     }
 
     @Nullable
@@ -53,7 +54,6 @@ public class AdventureActivity extends Fragment {
         //Glide.with(this).load(R.raw.adventure).into(adventure_back);
         //root.setContentView(new MyGameView(this));
 
-        user = (User) getArguments().getSerializable("user");
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }

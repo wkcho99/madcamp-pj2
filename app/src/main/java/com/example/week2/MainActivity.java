@@ -86,7 +86,6 @@ public class MainActivity extends FragmentActivity {
 
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
-        fragment2.setArguments(bundle);
         fragment3.setArguments(bundle);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -177,5 +176,7 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         setResult(RESULT_OK);
         super.onDestroy();
+        Log.i("socketIO", "destroy");
+        socketClient.disconnect();
     }
 }

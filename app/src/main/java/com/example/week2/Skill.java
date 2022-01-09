@@ -70,11 +70,8 @@ public class Skill implements Serializable {
 
     @Override
     public String toString() {
-        return "Skill{" +
+        return "{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", cool=" + cool +
-                ", skillcoin=" + skillcoin +
                 ", level=" + level +
                 '}';
     }

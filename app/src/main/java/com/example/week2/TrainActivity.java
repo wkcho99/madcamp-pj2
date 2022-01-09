@@ -76,9 +76,15 @@ public class TrainActivity extends Fragment {
         }
         //Log.i("addrList info", addrList.get(1).getName());
         mAdapter.setmList(addrList);
-        socketClient.notifySkillChange();
-        TextView view = getActivity().findViewById(R.id.coin);
-        view.setText(""+user.getCoin());
+        socketClient.notifyChange();
+        TextView coinView = getActivity().findViewById(R.id.coin);
+        coinView.setText(""+user.getCoin());
+
+        TextView expView = getActivity().findViewById(R.id.exp);
+        expView.setText(String.format("%.2f%%", user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100)));
+
+        TextView levelView = getActivity().findViewById(R.id.level);
+        levelView.setText("Lv."+user.getPoke().getLevel());
     }
 
     @Override
@@ -136,6 +142,12 @@ public class TrainActivity extends Fragment {
                 user.getPoke().getSkills().get(position).setPower(s.getPower()+position+1);
             user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
                 user.getPoke().getSkills().get(position).setSkillcoin();
+                long newExp = user.getPoke().getExp()+(position+1)*user.getPoke().getSkills().get(position).getLevel();
+                if(newExp >= Math.pow(user.getPoke().level,2)*100){
+                    newExp -= Math.pow(user.getPoke().level,2)*100;
+                    user.getPoke().setLevel(user.getPoke().getLevel()+1);
+                }
+                user.getPoke().setExp(newExp);
             //코인 양 체크
             //코인 감소
                 // 요구레벨 체크
