@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,10 +82,13 @@ public class TrainActivity extends Fragment {
         coinView.setText(""+user.getCoin());
 
         TextView expView = getActivity().findViewById(R.id.exp);
-        expView.setText(String.format("%.2f%%", user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100)));
+        double expper = user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100);
+        expView.setText(String.format("%.2f%%", expper));
 
         TextView levelView = getActivity().findViewById(R.id.level);
         levelView.setText("Lv."+user.getPoke().getLevel());
+        ProgressBar prog = getActivity().findViewById(R.id.progressBar);
+        prog.setProgress((int)Math.round(expper));
     }
 
     @Override
@@ -107,6 +111,7 @@ public class TrainActivity extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = view.findViewById(R.id.recyclerview_list);
         my_poke = view.findViewById(R.id.train_poke);
+        Log.i("user pokemon number", user.getPoke().getNumber()+"");
         train_back = view.findViewById(R.id.train_back);
         lvup = view.findViewById(R.id.lvup);
         //my_poke.setImageResource(R.drawable.pokemon1);
@@ -117,7 +122,7 @@ public class TrainActivity extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
-
+        setMy_poke(my_poke,user.getPoke().getNumber());
 
         updateData();
         mAdapter.setOnItemCLickListener(new TrainAdapter.OnItemClickListener() {
@@ -128,8 +133,8 @@ public class TrainActivity extends Fragment {
                 Toast.makeText(view.getContext(), "코인이 부족합니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(Math.pow(position,2)>user.poke.getLevel()){
-                Toast.makeText(view.getContext(), "레벨이 부족합니다.", Toast.LENGTH_SHORT).show();
+            if(Math.pow((position+1),2)>user.poke.getLevel()){
+                Toast.makeText(view.getContext(), "레벨이 부족합니다. 필요레벨: "+(int)Math.pow((position+1),2), Toast.LENGTH_SHORT).show();
                 return;
             }
             if(s.getLevel() == 99){
@@ -138,14 +143,21 @@ public class TrainActivity extends Fragment {
             }
             user.setCoin(user.getCoin() - s.getSkillcoin());
 
-                Log.i("getlevel before",""+user.getPoke().getSkills().get(position).getPower());
                 user.getPoke().getSkills().get(position).setPower(s.getPower()+position+1);
             user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
                 user.getPoke().getSkills().get(position).setSkillcoin();
                 long newExp = user.getPoke().getExp()+(position+1)*user.getPoke().getSkills().get(position).getLevel();
                 if(newExp >= Math.pow(user.getPoke().level,2)*100){
-                    newExp -= Math.pow(user.getPoke().level,2)*100;
-                    user.getPoke().setLevel(user.getPoke().getLevel()+1);
+                    while(newExp >= Math.pow(user.getPoke().level,2)*100) {
+                        newExp -= Math.pow(user.getPoke().level, 2) * 100;
+                        user.getPoke().setLevel(user.getPoke().getLevel() + 1);
+
+                        if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
+                            user.getPoke().setNumber(user.getPoke().getNumber() + 1);
+                            Log.i("evolution", "" + user.getPoke().getNumber());
+                            setMy_poke(my_poke, user.getPoke().getNumber());
+                        }
+                    }
                 }
                 user.getPoke().setExp(newExp);
             //코인 양 체크
@@ -185,5 +197,36 @@ public class TrainActivity extends Fragment {
                         Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
+    }
+    public static void setMy_poke(ImageView img, int num){
+        switch (num){
+            case 0:
+                img.setImageResource(R.drawable.pokemon1);
+                break;
+            case 1:
+                img.setImageResource(R.drawable.pokemon2);
+                break;
+            case 2:
+                img.setImageResource(R.drawable.pokemon3);
+                break;
+            case 3:
+                img.setImageResource(R.drawable.pokemon4);
+                break;
+            case 4:
+                img.setImageResource(R.drawable.pokemon5);
+                break;
+            case 5:
+                img.setImageResource(R.drawable.pokemon6);
+                break;
+            case 6:
+                img.setImageResource(R.drawable.pokemon7);
+                break;
+            case 7:
+                img.setImageResource(R.drawable.pokemon8);
+                break;
+            case 8:
+                img.setImageResource(R.drawable.pokemon9);
+                break;
+        }
     }
 }

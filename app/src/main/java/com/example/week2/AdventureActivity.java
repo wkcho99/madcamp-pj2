@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -28,53 +30,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class AdventureActivity extends Fragment {
-    private ArrayList<Skill> addrList = new ArrayList<Skill>();
-    private RecyclerView mRecyclerView;
-    private GridLayoutManager mGridManager;
     private Context context;
-    User user;
-    private AdventureAdapter mAdapter;
     private ContentResolver contentResolver;
     private AnimationDrawable animationDrawable;
     SocketClient socketClient;
+    MainActivity activity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contentResolver = getActivity().getContentResolver();
         socketClient = (SocketClient) getActivity().getApplicationContext();
-        user = socketClient.getUser();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.adventure_activity, container, false);
-
-        //Glide.with(this).load(R.raw.adventure).into(adventure_back);
-        //root.setContentView(new MyGameView(this));
-
-        for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
-            addrList.add(user.getPoke().getSkills().get(i));
-        }
-        mAdapter = new AdventureAdapter(context, addrList);
         return root;
         //return new GameView(getActivity());
 
-    }
-    private void updateData(){
-        addrList.clear();
-//        skill1.setCool(5.0f);
-//        skill1.setLevel(1);
-//        skill1.setPower(10);
-//        skill1.setName("몸통박치기");
-        for(int i = 0; i<user.getPoke().getSkills().size();i++)
-        {
-            addrList.add(user.getPoke().getSkills().get(i));
-        }
-        Log.i("addrList info", addrList.get(1).getName());
-        //mAdapter.setmList2(addrList);
-        mAdapter.notifyDataSetChanged();
     }
     @Override
     public void onDestroyView() {
@@ -86,54 +61,79 @@ public class AdventureActivity extends Fragment {
         super.onDestroy();
     }
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        context = getActivity();
-        contentResolver = getActivity().getContentResolver();
-        Log.i("adventureactivity info1",addrList.get(1).getName());
-        mGridManager = new GridLayoutManager(context, 2);
-        mRecyclerView = view.findViewById(R.id.recyclerview_list2);
-        ImageView adventure_back = view.findViewById(R.id.adventure_back);
-        ImageView adventure_poke = view.findViewById(R.id.adventure_poke);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(mGridManager);
-        updateData();
-        mRecyclerView.setAdapter(mAdapter);
-        Log.i("activity addrlist",addrList.get(1).getName());
-        //mAdapter.setmList2(addrList);
-        final Animation adventuring = AnimationUtils.loadAnimation(getActivity(), R.anim.adventuring);
-        animationDrawable = (AnimationDrawable) adventure_back.getBackground();
-        animationDrawable.start();
-        adventure_poke.startAnimation(adventuring);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                mGridManager.HORIZONTAL);
-        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(mRecyclerView.getContext(),
-                mGridManager.VERTICAL);
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
-        mRecyclerView.addItemDecoration(dividerItemDecoration2);
-        //mAdapter.setmList2(addrList);
-        mAdapter.setOnItemCLickListener2(new AdventureAdapter.OnItemClickListener2() {
-            @Override
-            public void onItemClick2(View v, int position, View itemView) {
-                modal(v, position);
-            }
-        });
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        activity = (MainActivity) getActivity();
     }
 
-    public void modal(final View view, int position) {
-        String msg;
-        Skill s = mAdapter.getItem(position);
-        msg = s.getName();
-        new AlertDialog.Builder(view.getContext())
-                .setTitle("스킬 정보")
-                .setMessage(msg)
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        activity = null;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        User user = socketClient.getUser();
+        context = getActivity();
+        contentResolver = getActivity().getContentResolver();
+        ImageView adventure_back = view.findViewById(R.id.adventure_back);
+        ImageView adventure_poke = view.findViewById(R.id.adventure_poke);
+        setdot_poke(adventure_poke,user.getPoke().getNumber());
+            final Animation adventuring = AnimationUtils.loadAnimation(getActivity(), R.anim.adventuring);
+            animationDrawable = (AnimationDrawable) adventure_back.getBackground();
+            animationDrawable.start();
+        adventuring.setAnimationListener(new Animation.AnimationListener(){
+                @Override
+                public void onAnimationEnd(Animation animation){ // 애니메이션이 끝났을 때
+                getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+            @Override
+            public void onAnimationStart(Animation animation){
+            }
 
-                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
-                        //((Activity) view.getContext()).finish();
-                    }
-                }).show();
+            @Override
+            public void onAnimationRepeat(Animation animation){
+            }
+        });
+        adventure_poke.startAnimation(adventuring);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(activity != null) activity.onFragmentChange(1);
+            }
+        }, 3000);
+
+    }
+    public static void setdot_poke(ImageView img, int num){
+        switch (num){
+            case 0:
+                img.setImageResource(R.drawable.dot1);
+                break;
+            case 1:
+                img.setImageResource(R.drawable.dot2);
+                break;
+            case 2:
+                img.setImageResource(R.drawable.dot3);
+                break;
+            case 3:
+                img.setImageResource(R.drawable.dot4);
+                break;
+            case 4:
+                img.setImageResource(R.drawable.dot5);
+                break;
+            case 5:
+                img.setImageResource(R.drawable.dot6);
+                break;
+            case 6:
+                img.setImageResource(R.drawable.dot7);
+                break;
+            case 7:
+                img.setImageResource(R.drawable.dot8);
+                break;
+            case 8:
+                img.setImageResource(R.drawable.dot9);
+                break;
+        }
     }
 }

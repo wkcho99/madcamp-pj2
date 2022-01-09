@@ -41,7 +41,7 @@ public class SocketClient extends Application {
         super.onCreate();
         instance = this;
         KakaoSdk.init(this, getString(R.string.kakaoApi));
-        user = new User(null, null, null, 0);
+        user = new User(null, null, null, 0,null);
 
         try {
             mSocket = IO.socket(getString(R.string.serverAddr));
@@ -53,7 +53,7 @@ public class SocketClient extends Application {
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
-
+                Log.i("socket recv", data.toString());
                 try {
                     user.setCoin(data.getLong("coin"));
                     pokemon = parsePokemon(data.getJSONObject("pokemon"));
@@ -104,7 +104,7 @@ public class SocketClient extends Application {
     public void requestUserInfo(String kakaoId){
         mSocket.connect();
         try {
-            user = new User(kakaoId, null, null, 0);
+            user = new User(kakaoId, null, null, 0,null);
             mSocket.emit("userInfo", new JSONObject("{\"user_id\":\""+kakaoId+"\"}"));
         } catch (JSONException e) {
             e.printStackTrace();

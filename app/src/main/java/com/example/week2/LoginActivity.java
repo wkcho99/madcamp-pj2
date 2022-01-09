@@ -113,7 +113,7 @@ public class LoginActivity extends Activity {
                 if(kakaoAccount != null){
                     Profile profile = kakaoAccount.getProfile();
 
-                    User loginuser = new User(null, null, null, 0);
+                    User loginuser = new User(null, null, null, 0,null);
                     socketClient.setUser(loginuser);
                     Toast.makeText(getApplicationContext(), "서버에 접속 중입니다.", Toast.LENGTH_SHORT).show();
                     socketClient.requestUserInfo(Long.toString(user.getId()));
