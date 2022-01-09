@@ -3,11 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +15,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <ImageView
                 android:id="@+id/adventure_back"
@@ -28,18 +26,26 @@
 
             <ImageView
                 android:id="@+id/adventure_poke"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:layout_marginTop="400dp"
                 android:layout_marginLeft="200dp"
                 android:src="@drawable/dot1" />
+
         </RelativeLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_list2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
-        <!--        <com.example.week2.GameView-->
+
+            <TextView
+                android:id="@+id/searching"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/pokemon_font"
+                android:gravity="center"
+                android:text="사냥감 찾는중..."
+                android:textAlignment="center"
+                android:textSize="20pt"
+                android:layout_weight="2"/>
+
+    <!--        <com.example.week2.GameView-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="match_parent"-->
         <!--            android:layout_weight="1"-->

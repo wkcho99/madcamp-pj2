@@ -3,8 +3,12 @@ package com.example.week2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.week2.register.RegisterActivity;
@@ -14,11 +18,15 @@ import com.kakao.sdk.user.model.Profile;
 
 import android.util.Log;
 
+import java.net.Socket;
+import java.util.ArrayList;
+
 public class LoginActivity extends Activity {
     SocketClient socketClient;
     Button kakaoTalkLogin;
     // Button kakaoLogout;
     // Button kakaoAccountLogin;
+    LinearLayout linearLayout;
     ServerThread thread;
     Profile profile;
     String kakaoId;
@@ -106,7 +114,7 @@ public class LoginActivity extends Activity {
                 if(kakaoAccount != null){
                     profile = kakaoAccount.getProfile();
                     kakaoId = Long.toString(user.getId());
-                    User loginUser = new User(null, null, null, 0);
+                    User loginUser = new User(null, null, null, 0, null);
                     socketClient.setUser(loginUser);
                     Toast.makeText(getApplicationContext(), "서버에 접속 중입니다.", Toast.LENGTH_SHORT).show();
                     socketClient.requestUserInfo(Long.toString(user.getId()));

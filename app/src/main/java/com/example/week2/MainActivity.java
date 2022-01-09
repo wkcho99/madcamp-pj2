@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class MainActivity extends FragmentActivity {
     Integer level;
     double exp;
     double expper;
+    int frag = 0;
     User user;
     SocketClient socketClient;
 
@@ -44,10 +47,11 @@ public class MainActivity extends FragmentActivity {
     TextView expview;
 
     Button logout, train, adventure, raid;
-
+    ProgressBar prog;
     TrainActivity fragment1;
     AdventureActivity fragment2;
     RaidActivity fragment3;
+    AdventureActivity2 fragment4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +71,12 @@ public class MainActivity extends FragmentActivity {
         levelview = findViewById(R.id.level);
         coinview = findViewById(R.id.coin);
         expview = findViewById(R.id.exp);
+        prog = findViewById(R.id.progressBar);
 
         fragment1 = new TrainActivity();
         fragment2 = new AdventureActivity();
         fragment3 = new RaidActivity();
+        fragment4 = new AdventureActivity2();
 
 
         //Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
@@ -115,8 +121,8 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "트레인 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 transaction.replace(R.id.fragment_main,fragment1);
-                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
@@ -125,8 +131,8 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "레이드 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 transaction.replace(R.id.fragment_main,fragment3);
-                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
@@ -134,10 +140,10 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "어드벤처 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main,fragment2);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                onFragmentChange(frag);
+//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_main,fragment2);
+//                transaction.commit();
             }
         });
 
@@ -155,12 +161,11 @@ public class MainActivity extends FragmentActivity {
         levelview.setText("Lv."+level);
         coinview.setText(""+coin);
         expper = exp*100/(Math.pow(user.poke.level,2)*100);
-        expview.setText(""+expper+"%");
+        expview.setText(String.format("%.2f%%", user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100)));
+        prog.setProgress((int)Math.round(expper));
         nick.setText(user.getName());
 
     }
-
-
 
     @Override
     protected void onStop() {
@@ -178,5 +183,24 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
         Log.i("socketIO", "destroy");
         socketClient.disconnect();
+    }
+    public void onFragmentChange(int index){
+        if(index == 0){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment2);
+            frag = 0;
+            transaction.commit();
+        }
+        if(index == 1){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment4);
+            frag = 1;
+            transaction.commit();
+        }
+
     }
 }

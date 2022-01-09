@@ -9,6 +9,15 @@ public class Skill implements Serializable {
     Integer skillcoin;
     int level;
     int power;
+    Long start;
+
+    public Long getStart() {
+        return start;
+    }
+
+    public void setStart(Long start) {
+        this.start = start;
+    }
 
     public int getId() {
         return id;
@@ -33,6 +42,7 @@ public class Skill implements Serializable {
         this.level = level;
         this.power = power;
         this.skillcoin = 0;
+        this.start = (long)0;
         setSkillcoin();
     }
 

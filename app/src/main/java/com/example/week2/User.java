@@ -9,13 +9,22 @@ public class User implements Serializable {
     String user_id;
     String name;
     Pokemon poke;
-    long coin;
 
-    public User(String user_id, String name, Pokemon poke, long coin){
+    Guild guild;
+    long coin;
+    public Guild getGuild() {
+        return guild;
+    }
+
+    public void setGuild(Guild guild) {
+        this.guild = guild;
+    }
+    public User(String user_id, String name, Pokemon poke, long coin,Guild guild){
         this.user_id = user_id;
         this.name = name;
         this.poke = poke;
         this.coin = coin;
+        this.guild = guild;
     }
 
     public String getUser_id() {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
         this.mList = list;
     }
     public interface OnItemClickListener2 {
+        void onUpClick2(View v, int position);
         void onItemClick2(View v, int position, View itemView);
     }
     public void setOnItemCLickListener2(AdventureAdapter.OnItemClickListener2 listener) {mListener = listener; }
@@ -51,6 +53,13 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
                     mListener.onItemClick2(view, getAdapterPosition(), view);
                 }
             });
+            bt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //스킬 레벨업
+                    mListener.onUpClick2(view, getAdapterPosition());
+                }
+            });
         }
     }
     public void setmList2(ArrayList<Skill> list){
@@ -71,8 +80,6 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
     @Override
     public void onBindViewHolder(@NonNull AdventureAdapter.CustomViewHolder viewholder, int position) {
         Skill data;
-        Log.i("adapter addrlist",mList.get(1).getName());
-        Log.i("adapter position",""+position);
         data = mList.get(position);
         Log.i("viewholder2:",data.getName()+data.getLevel());
         viewholder.name.setText(data.getName());
@@ -93,4 +100,5 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
     public int getItemViewType(int position) {
         return position;
     }
+
 }
