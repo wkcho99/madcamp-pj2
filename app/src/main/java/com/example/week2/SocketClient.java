@@ -54,12 +54,45 @@ public class SocketClient extends Application {
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
 
+                Log.i("received", data.toString());
+
                 try {
                     user.setCoin(data.getLong("coin"));
                     pokemon = parsePokemon(data.getJSONObject("pokemon"));
                     user.setPoke(pokemon);
                     user.setName(data.getString("name"));
                     Log.i("socketIO", pokemon.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mSocket.on("register", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                Log.i("socketIO", String.valueOf(data));
+                try {
+                    user.setUser_id(data.getString("user_id"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mSocket.on("registerDone", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                Log.i("thread", data.toString());
+                try {
+                    user.setCoin(data.getLong("coin"));
+                    pokemon = parsePokemon(data.getJSONObject("pokemon"));
+                    user.setPoke(pokemon);
+                    user.setName(data.getString("name"));
+                    Log.i("thread2", user.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -106,6 +139,14 @@ public class SocketClient extends Application {
         try {
             user = new User(kakaoId, null, null, 0);
             mSocket.emit("userInfo", new JSONObject("{\"user_id\":\""+kakaoId+"\"}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void register(String query){
+        try {
+            mSocket.emit("register", new JSONObject(query));
         } catch (JSONException e) {
             e.printStackTrace();
         }

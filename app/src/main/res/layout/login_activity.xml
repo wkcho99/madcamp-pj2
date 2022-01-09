@@ -4,18 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/adventure_back"
     tools:context=".LoginActivity">
 
+
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:gravity="center_horizontal"
+        android:id="@+id/loginImages"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="100sp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pokemon_logo"/>
 
 
     </LinearLayout>
@@ -28,14 +35,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="5">
 
-        <Button
-            android:id="@+id/kakaoTalkLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/kakao_login_medium_narrow">
-        </Button>
 <!--        <Button-->
 <!--            android:id="@+id/kakaoAccountLogin"-->
 <!--            android:layout_width="wrap_content"-->
@@ -59,6 +61,13 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:text="카카오 로그아웃">-->
 <!--        </Button>-->
+
+        <Button
+            android:id="@+id/kakaoTalkLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/kakao_login_medium_wide">
+        </Button>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,15 +26,18 @@ public class ServerThread extends Thread{
             user = socketClient.getUser();
             time += 1;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-        } while (time <= 3 && user.getName() == null);
+        } while (time <= 10 && user.getUser_id() == null);
 
-        if(user.getName() != null)
-            loginActivity.startActivity();
+        if(user.getName() != null) {
+            loginActivity.startActivity(0);
+        } else if(time <= 10){
+            loginActivity.startActivity(1);
+        }
         else{
             Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(new Runnable() {
@@ -42,6 +45,7 @@ public class ServerThread extends Thread{
                 public void run()
                 {
                     Toast.makeText(loginActivity, "서버에 접속할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    socketClient.disconnect();
                 }
             }, 0);
         }

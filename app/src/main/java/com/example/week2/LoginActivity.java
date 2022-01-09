@@ -3,38 +3,32 @@ package com.example.week2;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.week2.register.RegisterActivity;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 import com.kakao.sdk.user.model.Profile;
 
 import android.util.Log;
 
-import java.net.Socket;
-import java.util.ArrayList;
-
 public class LoginActivity extends Activity {
     SocketClient socketClient;
     Button kakaoTalkLogin;
     // Button kakaoLogout;
     // Button kakaoAccountLogin;
-    LinearLayout linearLayout;
     ServerThread thread;
+    Profile profile;
+    String kakaoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         viewInit();
-        linearLayout.bringToFront();
-        linearLayout.setVisibility(View.INVISIBLE);
+
         socketClient = (SocketClient) getApplicationContext();
         thread = new ServerThread(this, socketClient);
 
@@ -97,7 +91,6 @@ public class LoginActivity extends Activity {
     }
 
     private void viewInit(){
-        linearLayout = findViewById(R.id.linearLayout);
         kakaoTalkLogin = findViewById(R.id.kakaoTalkLogin);
         //kakaoAccountLogin = findViewById(R.id.kakaoAccountLogin);
         //kakaoLogout = findViewById(R.id.kakaoLogout);
@@ -111,10 +104,10 @@ public class LoginActivity extends Activity {
             } else{
                 Account kakaoAccount = user.getKakaoAccount();
                 if(kakaoAccount != null){
-                    Profile profile = kakaoAccount.getProfile();
-
-                    User loginuser = new User(null, null, null, 0);
-                    socketClient.setUser(loginuser);
+                    profile = kakaoAccount.getProfile();
+                    kakaoId = Long.toString(user.getId());
+                    User loginUser = new User(null, null, null, 0);
+                    socketClient.setUser(loginUser);
                     Toast.makeText(getApplicationContext(), "서버에 접속 중입니다.", Toast.LENGTH_SHORT).show();
                     socketClient.requestUserInfo(Long.toString(user.getId()));
                     thread.start();
@@ -130,11 +123,21 @@ public class LoginActivity extends Activity {
     }
 
 
-    public void startActivity(){
+    public void startActivity(int code){
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finish();
+        if(code == 0) {
+            // game start
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else if(code == 1){
+            // register
+            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+            intent.putExtra("userName", profile.getNickname());
+            intent.putExtra("kakaoId", kakaoId);
+            startActivity(intent);
+            finish();
+        }
 
     }
 

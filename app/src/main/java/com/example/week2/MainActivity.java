@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity {
         fragment3 = new RaidActivity();
 
 
-        Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
+        //Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
 
         logout = findViewById(R.id.logout);
         train = findViewById(R.id.train);

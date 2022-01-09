@@ -60,4 +60,12 @@ public class User implements Serializable {
                 '}';
     }
 
+    public String toStringWithoutPoke(){
+        return "{" +
+                "user_id='" + user_id + '\'' +
+                ", name='" + name + '\'' +
+                ", coin=" + coin +
+                '}';
+    }
+
 }
