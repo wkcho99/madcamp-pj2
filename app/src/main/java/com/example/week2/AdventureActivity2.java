@@ -158,6 +158,7 @@ public class AdventureActivity2 extends Fragment {
                 narr.setText("사냥감을 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ "\n"+user.poke.level*19+" 경험치 획득");
                 if(newExp >= Math.pow(user.getPoke().level,2)*100){
                     while(newExp >= Math.pow(user.getPoke().level,2)*100) {
+
                         newExp -= Math.pow(user.getPoke().level, 2) * 100;
                         user.getPoke().setLevel(user.getPoke().getLevel() + 1);
                         narr.setText("포켓몬의 레벨이 상승했다!");
@@ -167,6 +168,7 @@ public class AdventureActivity2 extends Fragment {
                             Log.i("evolution", "" + user.getPoke().getNumber());
                             TrainActivity.setMy_poke(adventure_poke2, user.getPoke().getNumber());
                         }
+                        socketClient.notifyChange();
                     }
                 }
                 user.getPoke().setExp(newExp);

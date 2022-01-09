@@ -123,8 +123,6 @@ public class TrainActivity extends Fragment {
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         setMy_poke(my_poke,user.getPoke().getNumber());
-
-        updateData();
         mAdapter.setOnItemCLickListener(new TrainAdapter.OnItemClickListener() {
             @Override
         public void onUpClick(View v, int position){
@@ -157,6 +155,7 @@ public class TrainActivity extends Fragment {
                             Log.i("evolution", "" + user.getPoke().getNumber());
                             setMy_poke(my_poke, user.getPoke().getNumber());
                         }
+                        socketClient.notifyChange();
                     }
                 }
                 user.getPoke().setExp(newExp);
