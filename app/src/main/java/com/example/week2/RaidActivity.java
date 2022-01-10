@@ -94,6 +94,7 @@ public class RaidActivity extends Fragment {
         liveData.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
             @Override
             public void onChanged(JSONArray jsonArray) {
+                Log.i("raidInfo", "change?");
                 try {
                     Log.i("raidActivity", ((JSONObject) liveData.getValue().get(1)).getString("guild"));
                     for(int i = 0; i <4; i++)
