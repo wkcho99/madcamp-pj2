@@ -12,14 +12,25 @@ const connection = mysql.createConnection({
   password : process.env.DBPASS,
   database : process.env.DBNAME
 });
-const port = 8090;
+const port = 8080;
 
 io.on('connection', (socket) => {
 	console.log("user connect");
 	
 	socket.on("userInfo", obj => {
-		console.log(obj.user_id)
+		console.log(obj.user_id + " login");
 		login(obj.user_id, socket);
+	})
+	
+	socket.on("change", obj => {
+		console.log(obj.user_id + " changed");
+		update(obj)
+	})
+	
+	socket.on("register", obj => {
+		console.log(obj.user_id + " register");
+		register(obj, socket);
+		
 	})
 	
 	socket.on('disconnect', () => {
@@ -37,6 +48,60 @@ app.get("/", (req, res) => {
 
 })
 
+function register(obj, socket){
+	
+	
+	var userInfo = {};
+  	var pokemonInfo = {};
+	
+			
+	connection.query('SELECT MAX(id) FROM users', (_, row, __) => {
+		var user_id = row[0]['MAX(id)']+1
+
+		connection.query('SELECT MAX(id) FROM pokemon', (_, prow, __) => {
+			var poke_id = prow[0]['MAX(id)']+1
+			var skills = [{"id": 1, "level":1}];
+			connection.query(`INSERT INTO users (id, kakao_id, name, pokemon_id, coin, class) 
+			VALUES (${user_id}, '${obj.user_id}', '${obj.name}', ${poke_id}, 0, ${obj.classValue})`,
+							(_, __, ___) => {
+				connection.query(`INSERT INTO pokemon (id, level, skills, exp, number)
+				VALUES (${poke_id}, 1, JSON_MERGE_PATCH(skills, '${JSON.stringify(skills)}'), 0, ${obj.pokeNum})`, 
+								(_, __, ___) => {
+					
+					userInfo["coin"] = 0;
+					userInfo["name"] = obj.name;
+					pokemonInfo["id"] = poke_id;
+					pokemonInfo["level"] = 1;
+					pokemonInfo["number"] = obj.pokeNum;
+					pokemonInfo["exp"] = 0;
+					skills[0]["name"] = "몸통박치기"
+					skills[0]["cool"] = 5
+					skills[0]["power"] = 10
+					pokemonInfo["skills"] = skills;
+					userInfo["pokemon"] = pokemonInfo;
+					userInfo["guild"] = obj.classValue;
+					
+					//console.log(JSON.stringify(userInfo));
+					socket.emit("registerDone", userInfo);
+				});
+
+			});
+		})
+	});
+	
+
+}
+
+function update(obj){
+	
+	var userQuery = `UPDATE users SET coin = ${obj.coin} WHERE kakao_id='${obj.user_id}'`;
+	var skills = obj.poke.skills;
+	var pokemonQuery = `UPDATE pokemon SET level = ${obj.poke.level}, exp = ${obj.poke.exp}, skills = JSON_MERGE_PATCH(skills, '${JSON.stringify(skills)}'), number = ${obj.poke.number} WHERE id='${obj.poke.id}'`;
+
+	connection.query(userQuery);
+	connection.query(pokemonQuery);
+}
+
 
 // 유저가 kakao id를 보낼 때
 function login(user_id, socket){
@@ -44,7 +109,6 @@ function login(user_id, socket){
   	var loginResult = {};
   	var userInfo = {};
   	var pokemonInfo = {};
-
   	var pokemon_id;
 	  
      
@@ -63,6 +127,7 @@ function login(user_id, socket){
             pokemonInfo["level"] = pkmRow[0].level;
             pokemonInfo["number"] = pkmRow[0].number;
             pokemonInfo["exp"] = pkmRow[0].exp;
+			pokemonInfo["guild"] = pkmRow[0].class;
 
             var skills = JSON.parse(pkmRow[0].skills)
             var skillInfoes = []
@@ -86,7 +151,9 @@ function login(user_id, socket){
 			  socket.emit("userInfo", userInfo);
             });
           });
-        }
+        } else{
+			socket.emit("register", {"user_id": user_id});
+		}
 
 	});
 }
