@@ -35,7 +35,8 @@ public class ServerThread extends Thread{
 
         if(user.getName() != null) {
             loginActivity.startActivity(0);
-        } else if(time <= 10){
+        } else if(time < 10){
+            Log.i("register time", ""+time);
             loginActivity.startActivity(1);
         }
         else{
