@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,6 +51,10 @@ public class RaidEntered extends Activity {
     private Integer damage = 0;
     public Integer is_raid;
     ProgressBar prog;
+    private int raid_cnt;
+
+    MutableLiveData<Integer> bossHp;
+
     private void updateData(){
         addrList.clear();
 //        skill1.setCool(5.0f);
@@ -80,6 +85,10 @@ public class RaidEntered extends Activity {
         contentResolver = getContentResolver();
         socketClient = (SocketClient) getApplicationContext();
         user = socketClient.getUser();
+
+        socketClient.requestBossInfo(bossHp);
+
+
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }
@@ -101,6 +110,7 @@ public class RaidEntered extends Activity {
         mRecyclerView.setLayoutManager(mGridManager);
         //updateData();
         mRecyclerView.setAdapter(mAdapter);
+        raid_cnt = user.getRaid_times();
         updateData();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mGridManager.HORIZONTAL);
@@ -112,6 +122,7 @@ public class RaidEntered extends Activity {
         final Animation die = AnimationUtils.loadAnimation(this, R.anim.mob_die);
         final Animation attacked = AnimationUtils.loadAnimation(this, R.anim.mob_attacked);
         //mAdapter.setmList2(addrList);
+
         mAdapter.setOnItemCLickListener3(new RaidEnteredAdapter.OnItemClickListener3() {
 
             @Override
@@ -131,7 +142,7 @@ public class RaidEntered extends Activity {
                     prog.setProgress(0);
                     Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
                     damage += raid_hp-attack;
-                    user.setRaid_times(user.getRaid_times()-1);
+                    user.setRaid_times(raid_cnt-1);
                     user.setCoin(newcoin);
                     user.getPoke().getSkills().get(position).setSkillcoin();
                     long newExp = user.getPoke().getExp()+user.poke.level*19;
@@ -184,7 +195,7 @@ public class RaidEntered extends Activity {
                     damage += attack;
                     raid_hp -= attack;
                     Log.i("raid times1",user.getRaid_times()+"");
-                    user.setRaid_times(user.getRaid_times()-1);
+                    user.setRaid_times(raid_cnt-1);
                     Log.i("raid times2",user.getRaid_times()+"");
                     socketClient.notifyChange();
                     prog.setProgress(raid_hp);
@@ -199,23 +210,14 @@ public class RaidEntered extends Activity {
             @Override
             public void run() {
                 if(getApplicationContext() != null){
+
                     //boss.setVisibility(View.INVISIBLE);
                     narr.setText("총 "+damage+"의 데미지를 입혔다!");
-                }
-            }
-        }, 9900);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(getApplicationContext() != null){
-                    //boss.setVisibility(View.INVISIBLE);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    //intent.putExtra("raid_hp",socketClient.getHp());
-                    startActivity(intent);
                     finish();
                 }
             }
         }, 10000);
+
     }
 
 

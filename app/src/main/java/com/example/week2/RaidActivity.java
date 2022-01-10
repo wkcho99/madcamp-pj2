@@ -76,11 +76,11 @@ public class RaidActivity extends Fragment {
         raidCnt.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                Log.i("raidActivity raid cnt", " " + raidCnt.getValue());
-                user.setRaid_times(raidCnt.getValue());
-                TextView cando = root.findViewById(R.id.cando);
-                cando.setText(user.getRaid_times()+"/3");
-                mAdapter1.notifyDataSetChanged();
+//                Log.i("raidActivity raid cnt", " " + raidCnt.getValue());
+//                user.setRaid_times(raidCnt.getValue());
+//                TextView cando = root.findViewById(R.id.cando);
+//                cando.setText(user.getRaid_times()+"/3");
+//                mAdapter1.notifyDataSetChanged();
             }
         });
 

@@ -77,8 +77,11 @@ public class SocketClient extends Application {
                         user.setGuild(data.getInt("guild"));
                         user.setEndTime(data.getLong("end_time"));
 
+                        user.setRaid_times(data.getInt("raid_cnt"));
+                        user.setRaid_damage(data.getInt("raid_damage"));
+
                         timeReward = (System.currentTimeMillis() - user.getEndTime()) / 60000;
-                        addCoin = timeReward * pokemon.getLevel() * 5;
+                        addCoin = timeReward * pokemon.getLevel() * 2;
                         user.setCoin(data.getLong("coin")+addCoin);
                         notifyChange();
 
@@ -231,6 +234,15 @@ public class SocketClient extends Application {
 
         mSocket.emit("boss");
         this.bossHp = bossHp;
+    }
+
+    public void sendRaidDamage(int guild, int damage){
+
+        try {
+            mSocket.emit("raidDamage", new JSONObject("{\"guild\":"+guild+", \"damage\":"+damage+"}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void disconnect(){
