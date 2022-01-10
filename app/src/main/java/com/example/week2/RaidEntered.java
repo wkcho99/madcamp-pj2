@@ -193,7 +193,6 @@ public class RaidEntered extends Activity {
                     damage += attack;
                     raid_hp -= attack;
                     Log.i("raid times1",user.getRaid_times()+"");
-                    user.setRaid_times(raid_cnt-1);
                     Log.i("raid times2",user.getRaid_times()+"");
                     socketClient.notifyChange();
                     prog.setProgress(raid_hp);
@@ -209,6 +208,7 @@ public class RaidEntered extends Activity {
             public void run() {
                 if(getApplicationContext() != null){
                     //boss.setVisibility(View.INVISIBLE);
+                    user.setRaid_times(raid_cnt-1);
                     narr.setText("총 "+damage+"의 데미지를 입혔다!");
                     finish();
                 }
