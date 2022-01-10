@@ -51,20 +51,17 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/dialog" />
 
-        <TextView
-            android:id="@+id/narr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/white"
-            android:fontFamily="@font/pokemon_font"
-            android:text="사냥감을 발견했다!"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textAlignment="gravity"
-            android:textSize="14pt"
-            android:backgroundTint="@android:color/transparent"
-            />
+            <TextView
+                android:id="@+id/narr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18sp"
+                android:layout_marginTop="5sp"
+                android:background="@color/white"
+                android:backgroundTint="@android:color/transparent"
+                android:fontFamily="@font/pokemon_font"
+                android:text="사냥감을 발견했다!"
+                android:textSize="8pt" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView

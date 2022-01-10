@@ -90,12 +90,6 @@
                 android:layout_height="wrap_content"
                 android:text="raid" />
 
-            <TextView
-                android:id="@+id/nickname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
 
             <Button
                 android:id="@+id/logout"

@@ -40,7 +40,6 @@ public class MainActivity extends FragmentActivity {
     int frag = 0;
     User user;
     SocketClient socketClient;
-
     TextView nick;
     TextView levelview;
     TextView coinview;
@@ -93,10 +92,8 @@ public class MainActivity extends FragmentActivity {
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
         fragment3.setArguments(bundle);
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
-
     }
 
     @Override
@@ -165,6 +162,7 @@ public class MainActivity extends FragmentActivity {
         prog.setProgress((int)Math.round(expper));
         nick.setText(user.getName());
 
+
     }
 
     @Override
@@ -199,6 +197,14 @@ public class MainActivity extends FragmentActivity {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             transaction.replace(R.id.fragment_main,fragment4);
             frag = 1;
+            transaction.commit();
+        }
+        if(index == 3){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment3);
+            frag = 3;
             transaction.commit();
         }
 

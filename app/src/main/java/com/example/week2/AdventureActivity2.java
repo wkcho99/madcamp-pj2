@@ -158,7 +158,7 @@ public class AdventureActivity2 extends Fragment {
                 user.setCoin(newcoin);
                 user.getPoke().getSkills().get(position).setSkillcoin();
                 long newExp = user.getPoke().getExp()+user.poke.level*19;
-                narr.setText("사냥감을 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ "\n"+user.poke.level*19+" 경험치 획득");
+                narr.setText("사냥감을 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ ","+user.poke.level*19+" 경험치 획득");
                 if(newExp >= Math.pow(user.getPoke().level,2)*100){
                     while(newExp >= Math.pow(user.getPoke().level,2)*100) {
 
@@ -167,7 +167,7 @@ public class AdventureActivity2 extends Fragment {
                         narr.setText("포켓몬의 레벨이 상승했다!");
                         if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
                             user.getPoke().setNumber(user.getPoke().getNumber() + 1);
-                            narr.setText("포켓몬이 진화했다!");
+                            narr.setText("포켓몬의 레벨이 상승했다!"+"포켓몬이 진화했다!");
                             Log.i("evolution", "" + user.getPoke().getNumber());
                             TrainActivity.setMy_poke(adventure_poke2, user.getPoke().getNumber());
                         }

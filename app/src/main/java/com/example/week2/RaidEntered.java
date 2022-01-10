@@ -1,6 +1,7 @@
 package com.example.week2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -39,12 +40,30 @@ public class RaidEntered extends Activity {
     private GridLayoutManager mGridManager;
     private Context context;
     User user;
-    private int raid_hp= 10000;
+    private int raid_hp= 100;
     private RaidEnteredAdapter mAdapter;
     MainActivity activity;
     private ContentResolver contentResolver;
     private AnimationDrawable animationDrawable;
     SocketClient socketClient;
+    private Long startTime;
+    private Integer damage = 0;
+    public Integer is_raid;
+    private void updateData(){
+        addrList.clear();
+//        skill1.setCool(5.0f);
+//        skill1.setLevel(1);
+//        skill1.setPower(10);
+//        skill1.setName("몸통박치기");
+        for(int i = 0; i<user.getPoke().getSkills().size();i++)
+        {
+            if(Math.pow((i+1),2)<=user.poke.getLevel()){
+                addrList.add(user.getPoke().getSkills().get(i));
+            }
+        }
+        //mAdapter.setmList2(addrList);
+        mAdapter.notifyDataSetChanged();
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,12 +88,14 @@ public class RaidEntered extends Activity {
         mRecyclerView.setLayoutManager(mGridManager);
         //updateData();
         mRecyclerView.setAdapter(mAdapter);
+        updateData();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mGridManager.HORIZONTAL);
         DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(mRecyclerView.getContext(),
                 mGridManager.VERTICAL);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.addItemDecoration(dividerItemDecoration2);
+        startTime = System.currentTimeMillis();
         final Animation die = AnimationUtils.loadAnimation(this, R.anim.mob_die);
         final Animation attacked = AnimationUtils.loadAnimation(this, R.anim.mob_attacked);
         //mAdapter.setmList2(addrList);
@@ -95,10 +116,12 @@ public class RaidEntered extends Activity {
                     //몬스터 죽음
                     boss.startAnimation(die);
                     Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
+                    damage += raid_hp-attack;
                     user.setCoin(newcoin);
                     user.getPoke().getSkills().get(position).setSkillcoin();
                     long newExp = user.getPoke().getExp()+user.poke.level*19;
-                    narr.setText("디아루가를 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ "\n"+user.poke.level*19+" 경험치 획득");
+                    ////다음으로
+                    narr.setText("디아루가를 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ ","+user.poke.level*19+" 경험치 획득");
                     if(newExp >= Math.pow(user.getPoke().level,2)*100){
                         while(newExp >= Math.pow(user.getPoke().level,2)*100) {
 
@@ -107,7 +130,7 @@ public class RaidEntered extends Activity {
                             narr.setText("포켓몬의 레벨이 상승했다!");
                             if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
                                 user.getPoke().setNumber(user.getPoke().getNumber() + 1);
-                                narr.setText("포켓몬이 진화했다!");
+                                narr.setText("포켓몬의 레벨이 상승했다!"+"포켓몬이 진화했다!");
                                 Log.i("evolution", "" + user.getPoke().getNumber());
                             }
 
@@ -115,23 +138,25 @@ public class RaidEntered extends Activity {
                     }
                     user.getPoke().setExp(newExp);
                     user.getPoke().setExp(newExp);
-                    TextView coinview = findViewById(R.id.coin);
-                    coinview.setText(""+newcoin);
-                    TextView expView = findViewById(R.id.exp);
-                    double expper = user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100);
-                    expView.setText(String.format("%.2f%%", expper));
-                    ProgressBar prog = findViewById(R.id.progressBar);
-                    prog.setProgress((int)Math.round(expper));
-                    TextView levelView = findViewById(R.id.level);
-                    levelView.setText("Lv."+user.getPoke().getLevel());
+//                    TextView coinview = findViewById(R.id.coin);
+//                    coinview.setText(""+newcoin);
+//                    TextView expView = findViewById(R.id.exp);
+//                    double expper = user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100);
+//                    expView.setText(String.format("%.2f%%", expper));
+//                    ProgressBar prog = findViewById(R.id.progressBar);
+//                    prog.setProgress((int)Math.round(expper));
+//                    TextView levelView = findViewById(R.id.level);
+//                    levelView.setText("Lv."+user.getPoke().getLevel());
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     socketClient.notifyChange();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if(activity != null){
+                            if(getApplicationContext() != null){
                                 //boss.setVisibility(View.INVISIBLE);
-                                activity.onFragmentChange(0);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }
                     }, 900);
@@ -140,6 +165,8 @@ public class RaidEntered extends Activity {
                 else {
                     narr.setText(mAdapter.getItem(position).getName()+" 스킬 사용!");
                     boss.startAnimation(attacked);
+                    narr.setText(mAdapter.getItem(position).getName()+" 스킬 사용!"+"\n"+mAdapter.getItem(position).getDamage()+"의 데미지를 입혔다!");
+                    damage += attack;
                     raid_hp -= attack;
                     mAdapter.getItem(position).setStart(System.currentTimeMillis());
                     Log.i("skill cool start",mAdapter.getItem(position).getName()+mAdapter.getItem(position).getStart());
@@ -147,6 +174,29 @@ public class RaidEntered extends Activity {
 
             }
         });
+        ///// 다음으로
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(getApplicationContext() != null){
+                    //boss.setVisibility(View.INVISIBLE);
+                    narr.setText("총 "+damage+"의 데미지를 입혔다!");
+                }
+            }
+        }, 9900);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(getApplicationContext() != null){
+                    //boss.setVisibility(View.INVISIBLE);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    //intent.putExtra("raid_hp",socketClient.getHp());
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        }, 10000);
     }
+
 
 }
