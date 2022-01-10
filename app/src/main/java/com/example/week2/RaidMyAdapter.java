@@ -22,6 +22,7 @@ import java.util.Map;
 
 public class RaidMyAdapter extends RecyclerView.Adapter<RaidMyAdapter.CustomViewHolder> {
     private List<Map.Entry<String, Integer>> mList;
+    private ArrayList<Integer> ranks = new ArrayList<Integer>();
     private Context context;
     private User user;
     public RaidMyAdapter(Context context, List<Map.Entry<String, Integer>> list) {
@@ -60,7 +61,17 @@ public class RaidMyAdapter extends RecyclerView.Adapter<RaidMyAdapter.CustomView
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
         viewholder.name.setText(mList.get(position).getKey());
-        viewholder.rank.setText(Integer.toString(position+1));
+        if((position != 0) && (mList.get(position).getValue() == mList.get(position-1).getValue()))
+        {
+            //Log.i("mlist pos & value",mList.get(position).getValue()+","+.getValue());
+            int temp = ranks.get(position-1);
+            viewholder.rank.setText(temp);
+            ranks.add(temp);
+        }
+        else {
+            viewholder.rank.setText(Integer.toString(position+1));
+            ranks.add(position+1);
+        }
         viewholder.damage_tot.setText(Integer.toString(mList.get(position).getValue()));
     }
     @Override

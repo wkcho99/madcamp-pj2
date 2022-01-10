@@ -1,7 +1,9 @@
 package com.example.week2;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RadialGradient;
 import android.graphics.drawable.AnimationDrawable;
@@ -51,14 +53,15 @@ public class RaidActivity extends Fragment {
     private RaidGuildAdapter mAdapter1;
     private RaidMyAdapter mAdapter2;
     private SocketClient socketClient;
-
+    Button bt;
     private MutableLiveData<Integer> raidCnt;
 
     private MutableLiveData<JSONArray> liveData;
     User user;
     private Context context;
     private ContentResolver contentResolver;
-
+    MutableLiveData<Integer> raid_hp;
+    int boss_hp;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +73,9 @@ public class RaidActivity extends Fragment {
         super.onResume();
         TextView cando = getActivity().findViewById(R.id.cando);
         cando.setText(user.getRaid_times()+"/3");
-        Log.i("i'm in resume","haha");
         socketClient.requestRaidInfo(liveData, raidCnt);
+        socketClient.requestBossInfo(raid_hp);
+        Log.i("i'm in resume","haha");
     }
 
     @Nullable
@@ -80,19 +84,8 @@ public class RaidActivity extends Fragment {
         View root = inflater.inflate(R.layout.raid_activity, container, false);
       liveData = new MutableLiveData<>();
         raidCnt = new MutableLiveData<>();
-
-
-        raidCnt.observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-//                Log.i("raidActivity raid cnt", " " + raidCnt.getValue());
-//                user.setRaid_times(raidCnt.getValue());
-//                TextView cando = root.findViewById(R.id.cando);
-//                cando.setText(user.getRaid_times()+"/3");
-//                mAdapter1.notifyDataSetChanged();
-            }
-        });
-
+        socketClient.requestRaidInfo(liveData, raidCnt);
+        bt = root.findViewById(R.id.start_bt);
         user = socketClient.getUser();
         liveData.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
             @Override
@@ -147,7 +140,15 @@ public class RaidActivity extends Fragment {
                 }
             }
         });
-
+        raid_hp.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (raid_hp == null || raid_hp.getValue() == 0) {
+                    bt.setEnabled(false);
+                } else
+                    bt.setEnabled(true);
+            }
+        });
 //        raid_first.startAnimation(bigger);
 //        raid_first.setScaleX(2.0f);
 //        raid_first.setScaleX(3.0f);
@@ -181,7 +182,6 @@ public class RaidActivity extends Fragment {
         ImageView raid_first = (ImageView) view.findViewById(R.id.raid_first);
         final Animation bigger = AnimationUtils.loadAnimation(getActivity(), R.anim.get_big);
         Glide.with(this).load(R.raw.raid_first).into(raid_first);
-        Button bt = view.findViewById(R.id.start_bt);
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,13 +189,31 @@ public class RaidActivity extends Fragment {
                     Toast.makeText(view.getContext(), "도전 횟수가 모두 소진되었습니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(boss_hp == 0){
+                    hp_modal(view);
+                    return;
+                }
                 Intent intent = new Intent(getActivity(), RaidEntered.class);
+                intent.putExtra("raid_hp",boss_hp);
                 startActivity(intent);
             }
         });
         //my_poke.setImageResource(R.drawable.pokemon1);
         //train_back.setImageResource(R.drawable.home);
 
+    }
+    public void hp_modal(final View view) {
+        String msg;
+        new AlertDialog.Builder(view.getContext())
+                .setTitle("도전 불가")
+                .setMessage("디아루가가 이미 처치되었습니다.")
+
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
     }
 
 }
