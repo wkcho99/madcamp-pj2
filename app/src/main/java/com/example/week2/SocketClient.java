@@ -63,7 +63,7 @@ public class SocketClient extends Application {
                         pokemon = parsePokemon(data.getJSONObject("pokemon"));
                         user.setPoke(pokemon);
                         user.setName(data.getString("name"));
-                        user.setGuild(data.getString("guild"));
+                        user.setGuild(data.getInt("guild"));
                         Log.i("socketIO", pokemon.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();

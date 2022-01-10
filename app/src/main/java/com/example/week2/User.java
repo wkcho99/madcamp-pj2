@@ -9,7 +9,7 @@ public class User implements Serializable {
     String user_id;
     String name;
     Pokemon poke;
-    String guild;
+    Integer guild;
     long coin;
     long endTime;
     Integer raid_damage;
@@ -38,14 +38,14 @@ public class User implements Serializable {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
-    public String getGuild() {
+    public Integer getGuild() {
         return guild;
     }
 
-    public void setGuild(String guild) {
+    public void setGuild(Integer guild) {
         this.guild = guild;
     }
-    public User(String user_id, String name, Pokemon poke, long coin,String guild,long endTime, Integer raid_damage, Integer raid_times){
+    public User(String user_id, String name, Pokemon poke, long coin,Integer guild,long endTime, Integer raid_damage, Integer raid_times){
         this.user_id = user_id;
         this.name = name;
         this.poke = poke;
