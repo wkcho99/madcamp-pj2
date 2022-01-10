@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -66,11 +67,11 @@ public class MainActivity extends FragmentActivity {
 
         user = socketClient.getUser();
 
+
         logout = findViewById(R.id.logout);
         train = findViewById(R.id.train);
         adventure = findViewById(R.id.adventure);
         raid = findViewById(R.id.raid);
-        nick = findViewById(R.id.nickname);
         levelview = findViewById(R.id.level);
         coinview = findViewById(R.id.coin);
         expview = findViewById(R.id.exp);
@@ -96,7 +97,6 @@ public class MainActivity extends FragmentActivity {
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
         fragment3.setArguments(bundle);
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
 
@@ -167,7 +167,7 @@ public class MainActivity extends FragmentActivity {
         expper = exp*100/(Math.pow(user.poke.level,2)*100);
         expview.setText(String.format("%.2f%%", user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100)));
         prog.setProgress((int)Math.round(expper));
-        nick.setText(user.getName());
+
 
 
         if(socketClient.addCoin > 0) {
@@ -209,6 +209,14 @@ public class MainActivity extends FragmentActivity {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             transaction.replace(R.id.fragment_main,fragment4);
             frag = 1;
+            transaction.commit();
+        }
+        if(index == 3){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment3);
+            frag = 3;
             transaction.commit();
         }
 

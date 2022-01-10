@@ -156,7 +156,6 @@ public class SocketClient extends Application {
 
     }
 
-
     private Pokemon parsePokemon(JSONObject obj) throws JSONException {
         int number = obj.getInt("number");
         ArrayList<Skill> skills = new ArrayList<>();
@@ -211,8 +210,6 @@ public class SocketClient extends Application {
     public void notifyChange(){
         try {
             user.setEndTime(System.currentTimeMillis());
-            Log.i("socketIO change", user.toString());
-
             JSONObject obj = new JSONObject(user.toString());
             Log.i("socketIO change", obj.toString());
 

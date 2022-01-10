@@ -33,6 +33,15 @@ io.on('connection', (socket) => {
 		
 	})
 	
+	socket.on("raid", () => {
+		getRaidRanking(socket);
+		connection.query(`SELECT raid_cnt FROM users WHERE kakao_id='${socket.kakao_id}'`,
+						(_, row, __) => {
+								
+			socket.emit('raidCnt', String(row[0].raid_cnt));
+		})
+	})
+	
 	socket.on('disconnect', () => {
 		console.log('user disconnect')
 	});
@@ -48,6 +57,45 @@ app.get("/", (req, res) => {
 
 })
 
+function getRaidRanking(socket){
+	
+	var query1 = "SELECT guild, name, raid_damage FROM users WHERE guild="
+	var query2 = " ORDER BY raid_damage DESC"
+	
+	var raidRanking = [];
+	
+	connection.query(query1+"1"+query2, (_, row1, __)=>{
+		connection.query(query1+"2"+query2, (_, row2, __)=>{
+			connection.query(query1+"3"+query2, (_, row3, __)=>{
+				connection.query(query1+"4"+query2, (_, row4, __)=>{
+					
+					var rows = [row1, row2, row3, row4];
+					
+					for(var i=0;i<4;i++){
+						
+						//var obj = {"guild": i+1, "name": [1], "damage": [10]};
+						
+						var obj = {"guild": i+1};
+						var users = [];
+
+						
+						for(var j=0;j<rows[i].length;j++){
+							users.push({"name":rows[i][j].name, "damage": rows[i][j].raid_damage});
+						}
+						
+						obj["users"] = users;
+						raidRanking.push(obj);
+					}
+					
+					socket.emit("raidInfo", raidRanking);
+					
+				});
+			});
+		});
+	});
+	
+}
+
 function register(obj, socket){
 	
 	
@@ -60,23 +108,37 @@ function register(obj, socket){
 
 		connection.query('SELECT MAX(id) FROM pokemon', (_, prow, __) => {
 			var poke_id = prow[0]['MAX(id)']+1
-			var skills = [{"id": 1, "level":1}];
-			connection.query(`INSERT INTO users (id, kakao_id, name, pokemon_id, coin, class) 
+			var skills = [{"id": 1, "level":1}, {"id": 2, "level":1}, {"id": 3, "level":1}];
+			connection.query(`INSERT INTO users (id, kakao_id, name, pokemon_id, coin, guild) 
 			VALUES (${user_id}, '${obj.user_id}', '${obj.name}', ${poke_id}, 0, ${obj.classValue})`,
 							(_, __, ___) => {
 				connection.query(`INSERT INTO pokemon (id, level, skills, exp, number)
 				VALUES (${poke_id}, 1, JSON_MERGE_PATCH(skills, '${JSON.stringify(skills)}'), 0, ${obj.pokeNum})`, 
 								(_, __, ___) => {
 					
-					userInfo["coin"] = 0;
+					socket.kakao_id = obj.user_id;
+					userInfo["user_id"] = obj.user_id;
+					userInfo["coin"] = 50;
 					userInfo["name"] = obj.name;
+					userInfo["end_time"] = new Date().getTime();
+					
 					pokemonInfo["id"] = poke_id;
 					pokemonInfo["level"] = 1;
 					pokemonInfo["number"] = obj.pokeNum;
 					pokemonInfo["exp"] = 0;
+					
 					skills[0]["name"] = "몸통박치기"
-					skills[0]["cool"] = 5
+					skills[0]["cool"] = 1
 					skills[0]["power"] = 10
+					
+					skills[1]["name"] = "파괴광선"
+					skills[1]["cool"] = 5
+					skills[1]["power"] = 50
+					
+					skills[2]["name"] = "잎날가르기"
+					skills[2]["cool"] = 3
+					skills[2]["power"] = 
+					
 					pokemonInfo["skills"] = skills;
 					userInfo["pokemon"] = pokemonInfo;
 					userInfo["guild"] = obj.classValue;
@@ -94,7 +156,8 @@ function register(obj, socket){
 
 function update(obj){
 	
-	var userQuery = `UPDATE users SET coin = ${obj.coin} WHERE kakao_id='${obj.user_id}'`;
+	
+	var userQuery = `UPDATE users SET coin = ${obj.coin}, end_time = ${obj.endTime} WHERE kakao_id='${obj.user_id}'`;
 	var skills = obj.poke.skills;
 	var pokemonQuery = `UPDATE pokemon SET level = ${obj.poke.level}, exp = ${obj.poke.exp}, skills = JSON_MERGE_PATCH(skills, '${JSON.stringify(skills)}'), number = ${obj.poke.number} WHERE id='${obj.poke.id}'`;
 
@@ -116,8 +179,12 @@ function login(user_id, socket){
      (_, userRow, __) => {
        
         if(userRow.length > 0){
+		  socket.kakao_id = userRow[0].kakao_id;
+		  userInfo["user_id"] = userRow[0].kakao_id;
           userInfo["coin"] = userRow[0].coin;
 		  userInfo["name"] = userRow[0].name;
+			userInfo["guild"] = userRow[0].guild;
+		  userInfo["end_time"] = userRow[0].end_time;
           pokemon_id = userRow[0].pokemon_id;
         
           connection.query(`SELECT * from pokemon WHERE id='${pokemon_id}'`, 
