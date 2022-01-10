@@ -123,6 +123,8 @@ public class SocketClient extends Application {
                         pokemon = parsePokemon(data.getJSONObject("pokemon"));
                         user.setPoke(pokemon);
                         user.setName(data.getString("name"));
+                        user.setGuild(data.getInt("guild"));
+                        user.setRaid_times(data.getInt("raid_cnt"));
                         Log.i("thread2", user.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
