@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -24,7 +26,7 @@ public class SocketClient extends Application {
     private Socket mSocket;
     private User user;
     private Pokemon pokemon;
-
+    //Map<String,Integer> guild_member = new HashMap<>();
     ArrayList<String> pokemon_list = new ArrayList<>(Arrays.asList(
             "모부기", "수풀부기", "토대부기", "불꽃숭이", "파이숭이", "초염몽", "팽도리", "팽태자", "엠페르트"
     ));
@@ -41,7 +43,7 @@ public class SocketClient extends Application {
         super.onCreate();
         instance = this;
         KakaoSdk.init(this, getString(R.string.kakaoApi));
-        user = new User(null, null, null, 0,null);
+        user = new User(null, null, null, 0,null,0,0,3);
 
         try {
             mSocket = IO.socket(getString(R.string.serverAddr));
@@ -59,6 +61,7 @@ public class SocketClient extends Application {
                     pokemon = parsePokemon(data.getJSONObject("pokemon"));
                     user.setPoke(pokemon);
                     user.setName(data.getString("name"));
+                    user.setGuild(data.getString("guild"));
                     Log.i("socketIO", pokemon.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -135,7 +138,7 @@ public class SocketClient extends Application {
     public void requestUserInfo(String kakaoId){
         mSocket.connect();
         try {
-            user = new User(kakaoId, null, null, 0, null);
+            user = new User(kakaoId, null, null, 0, null,0,0,3);
             mSocket.emit("userInfo", new JSONObject("{\"user_id\":\""+kakaoId+"\"}"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -152,9 +155,9 @@ public class SocketClient extends Application {
 
     public void notifyChange(){
         try {
+            user.setEndTime(System.currentTimeMillis());
             JSONObject obj = new JSONObject(user.toString());
             Log.i("socketIO change", String.valueOf(obj));
-
             mSocket.emit("change", obj);
         } catch (JSONException e) {
             e.printStackTrace();

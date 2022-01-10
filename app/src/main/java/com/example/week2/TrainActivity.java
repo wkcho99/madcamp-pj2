@@ -142,7 +142,7 @@ public class TrainActivity extends Fragment {
             }
             user.setCoin(user.getCoin() - s.getSkillcoin());
 
-                user.getPoke().getSkills().get(position).setDamage(s.getPower()+position+1);
+                user.getPoke().getSkills().get(position).setDamage(s.getDamage()+position+1);
             user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
                 user.getPoke().getSkills().get(position).setSkillcoin();
                 long newExp = user.getPoke().getExp()+(position+1)*user.getPoke().getSkills().get(position).getLevel();

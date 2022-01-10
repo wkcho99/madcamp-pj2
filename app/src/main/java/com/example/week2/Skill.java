@@ -44,7 +44,7 @@ public class Skill implements Serializable {
         this.power = power;
         this.skillcoin = 0;
         this.start = (long)0;
-        this.damage = (this.id % 10 ) * this.level + this.power;
+        this.damage = (this.id % 10 ) * (this.level-1) + this.power;
         setSkillcoin();
     }
 
