@@ -174,7 +174,9 @@ public class RaidEntered extends Activity {
 //                    TextView levelView = findViewById(R.id.level);
 //                    levelView.setText("Lv."+user.getPoke().getLevel());
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    socketClient.getUser().setRaid_damage(socketClient.getUser().getRaid_damage() + damage);
                     socketClient.notifyChange();
+                    socketClient.sendRaidDamage(damage);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -192,9 +194,6 @@ public class RaidEntered extends Activity {
                     narr.setText(mAdapter.getItem(position).getName()+" 스킬 사용!"+"\n"+mAdapter.getItem(position).getDamage()+"의 데미지를 입혔다!");
                     damage += attack;
                     raid_hp -= attack;
-                    Log.i("raid times1",user.getRaid_times()+"");
-                    Log.i("raid times2",user.getRaid_times()+"");
-                    socketClient.notifyChange();
                     prog.setProgress(raid_hp);
                     mAdapter.getItem(position).setStart(System.currentTimeMillis());
                     Log.i("skill cool start",mAdapter.getItem(position).getName()+mAdapter.getItem(position).getStart());
@@ -210,6 +209,10 @@ public class RaidEntered extends Activity {
                     //boss.setVisibility(View.INVISIBLE);
                     user.setRaid_times(raid_cnt-1);
                     narr.setText("총 "+damage+"의 데미지를 입혔다!");
+                    socketClient.sendRaidDamage(damage);
+
+                    socketClient.getUser().setRaid_damage(socketClient.getUser().getRaid_damage() + damage);
+                    socketClient.notifyChange();
                     finish();
                 }
             }

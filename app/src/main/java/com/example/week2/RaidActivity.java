@@ -71,6 +71,7 @@ public class RaidActivity extends Fragment {
         TextView cando = getActivity().findViewById(R.id.cando);
         cando.setText(user.getRaid_times()+"/3");
         Log.i("i'm in resume","haha");
+        socketClient.requestRaidInfo(liveData, raidCnt);
     }
 
     @Nullable
@@ -79,7 +80,7 @@ public class RaidActivity extends Fragment {
         View root = inflater.inflate(R.layout.raid_activity, container, false);
       liveData = new MutableLiveData<>();
         raidCnt = new MutableLiveData<>();
-        socketClient.requestRaidInfo(liveData, raidCnt);
+
 
         raidCnt.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override

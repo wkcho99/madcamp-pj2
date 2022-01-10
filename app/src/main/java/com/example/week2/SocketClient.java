@@ -145,7 +145,14 @@ public class SocketClient extends Application {
                 }
             });
 
-
+            mSocket.on("bossHp", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    String data = (String) args[0];
+                    //Log.i("raidCnt", data);
+                    bossHp.postValue(Integer.parseInt(data));
+                }
+            });
 
         } catch (URISyntaxException e) {
             Log.e("socketIO", e.toString());
@@ -232,14 +239,18 @@ public class SocketClient extends Application {
 
     public void requestBossInfo(MutableLiveData<Integer> bossHp){
 
-        mSocket.emit("boss");
+        try {
+            mSocket.emit("boss", new JSONObject("{\"guild\":"+user.getGuild()+"}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         this.bossHp = bossHp;
     }
 
-    public void sendRaidDamage(int guild, int damage){
+    public void sendRaidDamage(int damage){
 
         try {
-            mSocket.emit("raidDamage", new JSONObject("{\"guild\":"+guild+", \"damage\":"+damage+"}"));
+            mSocket.emit("raidDamage", new JSONObject("{\"guild\":"+user.getGuild()+", \"damage\":"+damage+"}"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
