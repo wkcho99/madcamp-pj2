@@ -249,4 +249,5 @@ public class AdventureActivity2 extends Fragment {
                     }
                 }).show();
     }
+
 }
