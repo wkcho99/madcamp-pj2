@@ -140,6 +140,7 @@ public class RaidEntered extends Activity {
                     //몬스터 죽음
                     boss.startAnimation(die);
                     prog.setProgress(0);
+                    raid_hp = 0;
                     Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
                     damage += raid_hp-attack;
                     user.setRaid_times(raid_cnt-1);
