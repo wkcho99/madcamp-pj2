@@ -38,7 +38,6 @@ public class LoginActivity extends Activity {
         viewInit();
 
         socketClient = (SocketClient) getApplicationContext();
-        thread = new ServerThread(this, socketClient);
 
         kakaoTalkLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,13 +110,21 @@ public class LoginActivity extends Activity {
                 Log.e("tag", "사용자 정보 요청 실패" + throwable);
             } else{
                 Account kakaoAccount = user.getKakaoAccount();
-                if(kakaoAccount != null){
+                if(kakaoAccount != null) {
                     profile = kakaoAccount.getProfile();
                     kakaoId = Long.toString(user.getId());
-                    User loginUser = new User(null, null, null, 0, null,0,0,3);
+                    User loginUser = new User(null, null, null, 0, 0, 0, 0, 3);
                     socketClient.setUser(loginUser);
                     Toast.makeText(getApplicationContext(), "서버에 접속 중입니다.", Toast.LENGTH_SHORT).show();
                     socketClient.requestUserInfo(Long.toString(user.getId()));
+
+
+                    if (thread != null && thread.isAlive()){
+                        thread.interrupt();
+                        thread = null;
+                    }
+
+                    thread = new ServerThread(this, socketClient);
                     thread.start();
                 }
             }

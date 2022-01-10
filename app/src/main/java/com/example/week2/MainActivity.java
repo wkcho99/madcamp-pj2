@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity {
         fragment4 = new AdventureActivity2();
 
 
-        //Log.i("mainactivity user info",user.name+user.getPoke().getSkills().get(1).getName());
+        Log.i("mainactivity user info",user.toString());
 
         logout = findViewById(R.id.logout);
         train = findViewById(R.id.train);

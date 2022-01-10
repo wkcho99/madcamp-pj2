@@ -15,7 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.kakao.sdk.user.UserApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +45,9 @@ public class RaidActivity extends Fragment {
     private RaidGuildAdapter mAdapter1;
     private RaidMyAdapter mAdapter2;
     private SocketClient socketClient;
+
+    private MutableLiveData<Integer> raidCnt;
+
     private MutableLiveData<JSONArray> liveData;
     User user;
     private Context context;
@@ -63,9 +63,17 @@ public class RaidActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.raid_activity, container, false);
+      liveData = new MutableLiveData<>();
+        raidCnt = new MutableLiveData<>();
+        socketClient.requestRaidInfo(raidInfo, raidCnt);
 
-        liveData = new MutableLiveData<>();
-        socketClient.requestRaidInfo(liveData);
+        raidCnt.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Log.i("raidActivity raid cnt", " " + raidCnt.getValue());
+            }
+        });
+
         user = socketClient.getUser();
         liveData.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
             @Override

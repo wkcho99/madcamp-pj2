@@ -38,6 +38,7 @@ public class User implements Serializable {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
+
     public Integer getGuild() {
         return guild;
     }
@@ -95,6 +96,7 @@ public class User implements Serializable {
                 ", name='" + name + '\'' +
                 ", poke=" + poke +
                 ", coin=" + coin +
+                ", endTime=" + endTime +
                 '}';
     }
 
@@ -103,6 +105,7 @@ public class User implements Serializable {
                 "user_id='" + user_id + '\'' +
                 ", name='" + name + '\'' +
                 ", coin=" + coin +
+                ", endTime=" + endTime +
                 '}';
     }
 

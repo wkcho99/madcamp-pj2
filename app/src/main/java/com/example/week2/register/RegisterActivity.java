@@ -54,7 +54,6 @@ public class RegisterActivity extends Activity{
         registerName = findViewById(R.id.registerName);
         registerClass = findViewById(R.id.registerClass);
         registerPokemon = findViewById(R.id.registerPokemon);
-        cancelBtn = findViewById(R.id.registerCancel);
         registerBtn = findViewById(R.id.registerOK);
 
         registerName.setText(userName);
