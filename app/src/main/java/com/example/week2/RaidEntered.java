@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,7 +41,7 @@ public class RaidEntered extends Activity {
     private GridLayoutManager mGridManager;
     private Context context;
     User user;
-    private int raid_hp= 100;
+    private int raid_hp= 1000;
     private RaidEnteredAdapter mAdapter;
     MainActivity activity;
     private ContentResolver contentResolver;
@@ -49,6 +50,11 @@ public class RaidEntered extends Activity {
     private Long startTime;
     private Integer damage = 0;
     public Integer is_raid;
+    ProgressBar prog;
+    private int raid_cnt;
+
+    MutableLiveData<Integer> bossHp;
+
     private void updateData(){
         addrList.clear();
 //        skill1.setCool(5.0f);
@@ -64,12 +70,25 @@ public class RaidEntered extends Activity {
         //mAdapter.setmList2(addrList);
         mAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prog = findViewById(R.id.progressBar3);
+        prog.setProgress(raid_hp);
+        updateData();
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contentResolver = getContentResolver();
         socketClient = (SocketClient) getApplicationContext();
         user = socketClient.getUser();
+
+        socketClient.requestBossInfo(bossHp);
+
+
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }
@@ -84,10 +103,14 @@ public class RaidEntered extends Activity {
         ImageView boss = findViewById(R.id.boss);
         boss.setVisibility(View.VISIBLE);
         TextView narr = findViewById(R.id.narr2);
+        prog = findViewById(R.id.progressBar3);
+        prog.setMax(raid_hp);
+        prog.setProgress(raid_hp);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mGridManager);
         //updateData();
         mRecyclerView.setAdapter(mAdapter);
+        raid_cnt = user.getRaid_times();
         updateData();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mGridManager.HORIZONTAL);
@@ -99,6 +122,7 @@ public class RaidEntered extends Activity {
         final Animation die = AnimationUtils.loadAnimation(this, R.anim.mob_die);
         final Animation attacked = AnimationUtils.loadAnimation(this, R.anim.mob_attacked);
         //mAdapter.setmList2(addrList);
+
         mAdapter.setOnItemCLickListener3(new RaidEnteredAdapter.OnItemClickListener3() {
 
             @Override
@@ -115,8 +139,11 @@ public class RaidEntered extends Activity {
                 {
                     //몬스터 죽음
                     boss.startAnimation(die);
+                    prog.setProgress(0);
+                    raid_hp = 0;
                     Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
                     damage += raid_hp-attack;
+                    user.setRaid_times(raid_cnt-1);
                     user.setCoin(newcoin);
                     user.getPoke().getSkills().get(position).setSkillcoin();
                     long newExp = user.getPoke().getExp()+user.poke.level*19;
@@ -148,14 +175,14 @@ public class RaidEntered extends Activity {
 //                    TextView levelView = findViewById(R.id.level);
 //                    levelView.setText("Lv."+user.getPoke().getLevel());
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    socketClient.getUser().setRaid_damage(socketClient.getUser().getRaid_damage() + damage);
                     socketClient.notifyChange();
+                    socketClient.sendRaidDamage(damage);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if(getApplicationContext() != null){
                                 //boss.setVisibility(View.INVISIBLE);
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
                                 finish();
                             }
                         }
@@ -168,6 +195,7 @@ public class RaidEntered extends Activity {
                     narr.setText(mAdapter.getItem(position).getName()+" 스킬 사용!"+"\n"+mAdapter.getItem(position).getDamage()+"의 데미지를 입혔다!");
                     damage += attack;
                     raid_hp -= attack;
+                    prog.setProgress(raid_hp);
                     mAdapter.getItem(position).setStart(System.currentTimeMillis());
                     Log.i("skill cool start",mAdapter.getItem(position).getName()+mAdapter.getItem(position).getStart());
                 }
@@ -180,22 +208,42 @@ public class RaidEntered extends Activity {
             public void run() {
                 if(getApplicationContext() != null){
                     //boss.setVisibility(View.INVISIBLE);
+                    user.setRaid_times(raid_cnt-1);
                     narr.setText("총 "+damage+"의 데미지를 입혔다!");
-                }
-            }
-        }, 9900);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(getApplicationContext() != null){
-                    //boss.setVisibility(View.INVISIBLE);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    //intent.putExtra("raid_hp",socketClient.getHp());
-                    startActivity(intent);
+                    socketClient.sendRaidDamage(damage);
+
+                    socketClient.getUser().setRaid_damage(socketClient.getUser().getRaid_damage() + damage);
+                    socketClient.notifyChange();
                     finish();
                 }
             }
         }, 10000);
+
+    }
+    @Override
+    public void onBackPressed() {
+        exitRaid();
+    }
+    public void exitRaid(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(RaidEntered.this);
+        builder.setMessage("레이드를 나가시겠습니까?(횟수가 차감되지 않습니다.)");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                RaidEntered.super.onBackPressed();
+                finish();
+                //socketClient.
+            }
+        });
+        builder.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

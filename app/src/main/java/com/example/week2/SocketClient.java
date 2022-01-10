@@ -1,7 +1,13 @@
 package com.example.week2;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -28,9 +34,13 @@ public class SocketClient extends Application {
     private Socket mSocket;
     private User user;
     private Pokemon pokemon;
+    private long timeReward;
 
     private MutableLiveData<JSONArray> raidInfo;
     private MutableLiveData<Integer> raidCnt;
+    private MutableLiveData<Integer> bossHp;
+    public long addCoin;
+
 
     //Map<String,Integer> guild_member = new HashMap<>();
     ArrayList<String> pokemon_list = new ArrayList<>(Arrays.asList(
@@ -60,14 +70,25 @@ public class SocketClient extends Application {
                     JSONObject data = (JSONObject) args[0];
                     try {
                         user.setUser_id(data.getString("user_id"));
-                        user.setCoin(data.getLong("coin"));
                         pokemon = parsePokemon(data.getJSONObject("pokemon"));
+
                         user.setPoke(pokemon);
                         user.setName(data.getString("name"));
                         user.setGuild(data.getInt("guild"));
                         user.setEndTime(data.getLong("end_time"));
+
+                        user.setRaid_times(data.getInt("raid_cnt"));
+                        user.setRaid_damage(data.getInt("raid_damage"));
+
+                        timeReward = (System.currentTimeMillis() - user.getEndTime()) / 60000;
+                        addCoin = timeReward * pokemon.getLevel() * 2;
+                        user.setCoin(data.getLong("coin")+addCoin);
+                        notifyChange();
+
                         Log.i("userInfo received", user.toString());
-                        Log.i("socketIO", pokemon.toString());
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -124,7 +145,14 @@ public class SocketClient extends Application {
                 }
             });
 
-
+            mSocket.on("bossHp", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    String data = (String) args[0];
+                    //Log.i("raidCnt", data);
+                    bossHp.postValue(Integer.parseInt(data));
+                }
+            });
 
         } catch (URISyntaxException e) {
             Log.e("socketIO", e.toString());
@@ -207,6 +235,26 @@ public class SocketClient extends Application {
         mSocket.emit("raid");
         this.raidInfo = raidInfo;
         this.raidCnt = raidCnt;
+    }
+
+    public void requestBossInfo(MutableLiveData<Integer> bossHp){
+
+        try {
+            Log.i("boss", "{\"guild\":"+user.getGuild()+"}");
+            mSocket.emit("boss", new JSONObject("{\"guild\":"+user.getGuild()+"}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        this.bossHp = bossHp;
+    }
+
+    public void sendRaidDamage(int damage){
+
+        try {
+            mSocket.emit("raidDamage", new JSONObject("{\"guild\":"+user.getGuild()+", \"damage\":"+damage+"}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void disconnect(){

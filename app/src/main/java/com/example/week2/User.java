@@ -97,6 +97,8 @@ public class User implements Serializable {
                 ", poke=" + poke +
                 ", coin=" + coin +
                 ", endTime=" + endTime +
+                ", raidCnt=" + raid_times +
+                ", raidDamage=" + raid_damage +
                 '}';
     }
 

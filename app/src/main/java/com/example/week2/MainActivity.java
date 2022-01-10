@@ -1,7 +1,10 @@
 package com.example.week2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -40,6 +45,8 @@ public class MainActivity extends FragmentActivity {
     int frag = 0;
     User user;
     SocketClient socketClient;
+
+    TextView nick;
     TextView levelview;
     TextView coinview;
     TextView expview;
@@ -92,6 +99,8 @@ public class MainActivity extends FragmentActivity {
         fragment3.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
+
+
     }
 
     @Override
@@ -160,6 +169,12 @@ public class MainActivity extends FragmentActivity {
         prog.setProgress((int)Math.round(expper));
 
 
+
+        if(socketClient.addCoin > 0) {
+            showDialog();
+            socketClient.addCoin = 0;
+        }
+
     }
 
     @Override
@@ -170,7 +185,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         setResult(RESULT_OK);
-        super.onBackPressed();
+        exitGame();
     }
     @Override
     protected void onDestroy() {
@@ -206,4 +221,41 @@ public class MainActivity extends FragmentActivity {
         }
 
     }
+
+    public void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("쉬는 동안 " + socketClient.addCoin + "코인 획득");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void exitGame(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("게임을 그만하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //socketClient
+                MainActivity.super.onBackPressed();
+                finishAffinity();
+            }
+        });
+        builder.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
