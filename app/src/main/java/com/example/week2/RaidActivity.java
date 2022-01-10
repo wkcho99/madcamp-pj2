@@ -61,7 +61,6 @@ public class RaidActivity extends Fragment {
     private Context context;
     private ContentResolver contentResolver;
     MutableLiveData<Integer> raid_hp;
-    int boss_hp;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,10 +81,15 @@ public class RaidActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.raid_activity, container, false);
-      liveData = new MutableLiveData<>();
+        liveData = new MutableLiveData<>();
         raidCnt = new MutableLiveData<>();
+        raid_hp = new MutableLiveData<>();
+
+        socketClient.requestBossInfo(raid_hp);
         socketClient.requestRaidInfo(liveData, raidCnt);
+
         bt = root.findViewById(R.id.start_bt);
+        bt.setEnabled(false);
         user = socketClient.getUser();
         liveData.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
             @Override
@@ -189,12 +193,12 @@ public class RaidActivity extends Fragment {
                     Toast.makeText(view.getContext(), "도전 횟수가 모두 소진되었습니다", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(boss_hp == 0){
+                if(raid_hp.getValue() == 0){
                     hp_modal(view);
                     return;
                 }
                 Intent intent = new Intent(getActivity(), RaidEntered.class);
-                intent.putExtra("raid_hp",boss_hp);
+                intent.putExtra("raid_hp",raid_hp.getValue());
                 startActivity(intent);
             }
         });

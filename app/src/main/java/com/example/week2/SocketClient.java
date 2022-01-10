@@ -240,6 +240,7 @@ public class SocketClient extends Application {
     public void requestBossInfo(MutableLiveData<Integer> bossHp){
 
         try {
+            Log.i("boss", "{\"guild\":"+user.getGuild()+"}");
             mSocket.emit("boss", new JSONObject("{\"guild\":"+user.getGuild()+"}"));
         } catch (JSONException e) {
             e.printStackTrace();
