@@ -1,7 +1,13 @@
 package com.example.week2;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -28,9 +34,13 @@ public class SocketClient extends Application {
     private Socket mSocket;
     private User user;
     private Pokemon pokemon;
+    private long timeReward;
 
     private MutableLiveData<JSONArray> raidInfo;
     private MutableLiveData<Integer> raidCnt;
+    private MutableLiveData<Integer> bossHp;
+    public long addCoin;
+
 
     //Map<String,Integer> guild_member = new HashMap<>();
     ArrayList<String> pokemon_list = new ArrayList<>(Arrays.asList(
@@ -60,13 +70,22 @@ public class SocketClient extends Application {
                     JSONObject data = (JSONObject) args[0];
                     try {
                         user.setUser_id(data.getString("user_id"));
-                        user.setCoin(data.getLong("coin"));
                         pokemon = parsePokemon(data.getJSONObject("pokemon"));
+
                         user.setPoke(pokemon);
                         user.setName(data.getString("name"));
                         user.setGuild(data.getInt("guild"));
                         user.setEndTime(data.getLong("end_time"));
+
+                        timeReward = (System.currentTimeMillis() - user.getEndTime()) / 60000;
+                        addCoin = timeReward * pokemon.getLevel() * 5;
+                        user.setCoin(data.getLong("coin")+addCoin);
+                        notifyChange();
+
                         Log.i("userInfo received", user.toString());
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -137,6 +156,7 @@ public class SocketClient extends Application {
 
     }
 
+
     private Pokemon parsePokemon(JSONObject obj) throws JSONException {
         int number = obj.getInt("number");
         ArrayList<Skill> skills = new ArrayList<>();
@@ -191,6 +211,8 @@ public class SocketClient extends Application {
     public void notifyChange(){
         try {
             user.setEndTime(System.currentTimeMillis());
+            Log.i("socketIO change", user.toString());
+
             JSONObject obj = new JSONObject(user.toString());
             Log.i("socketIO change", obj.toString());
 
@@ -206,6 +228,12 @@ public class SocketClient extends Application {
         mSocket.emit("raid");
         this.raidInfo = raidInfo;
         this.raidCnt = raidCnt;
+    }
+
+    public void requestBossInfo(MutableLiveData<Integer> bossHp){
+
+        mSocket.emit("boss");
+        this.bossHp = bossHp;
     }
 
     public void disconnect(){

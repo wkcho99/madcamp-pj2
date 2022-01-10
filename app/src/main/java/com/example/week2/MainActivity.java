@@ -1,7 +1,10 @@
 package com.example.week2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -62,7 +66,6 @@ public class MainActivity extends FragmentActivity {
 
         user = socketClient.getUser();
 
-
         logout = findViewById(R.id.logout);
         train = findViewById(R.id.train);
         adventure = findViewById(R.id.adventure);
@@ -96,6 +99,7 @@ public class MainActivity extends FragmentActivity {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
+
 
     }
 
@@ -165,6 +169,12 @@ public class MainActivity extends FragmentActivity {
         prog.setProgress((int)Math.round(expper));
         nick.setText(user.getName());
 
+
+        if(socketClient.addCoin > 0) {
+            showDialog();
+            socketClient.addCoin = 0;
+        }
+
     }
 
     @Override
@@ -203,4 +213,19 @@ public class MainActivity extends FragmentActivity {
         }
 
     }
+
+    public void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("쉬는 동안 " + socketClient.addCoin + "코인 획득");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
