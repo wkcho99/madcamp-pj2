@@ -40,7 +40,7 @@ public class RaidEntered extends Activity {
     private GridLayoutManager mGridManager;
     private Context context;
     User user;
-    private int raid_hp= 100;
+    private int raid_hp= 1000;
     private RaidEnteredAdapter mAdapter;
     MainActivity activity;
     private ContentResolver contentResolver;
@@ -49,6 +49,7 @@ public class RaidEntered extends Activity {
     private Long startTime;
     private Integer damage = 0;
     public Integer is_raid;
+    ProgressBar prog;
     private void updateData(){
         addrList.clear();
 //        skill1.setCool(5.0f);
@@ -64,6 +65,15 @@ public class RaidEntered extends Activity {
         //mAdapter.setmList2(addrList);
         mAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prog = findViewById(R.id.progressBar3);
+        prog.setProgress(raid_hp);
+        updateData();
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +94,9 @@ public class RaidEntered extends Activity {
         ImageView boss = findViewById(R.id.boss);
         boss.setVisibility(View.VISIBLE);
         TextView narr = findViewById(R.id.narr2);
+        prog = findViewById(R.id.progressBar3);
+        prog.setMax(raid_hp);
+        prog.setProgress(raid_hp);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mGridManager);
         //updateData();
@@ -115,8 +128,10 @@ public class RaidEntered extends Activity {
                 {
                     //몬스터 죽음
                     boss.startAnimation(die);
+                    prog.setProgress(0);
                     Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
                     damage += raid_hp-attack;
+                    user.setRaid_times(user.getRaid_times()-1);
                     user.setCoin(newcoin);
                     user.getPoke().getSkills().get(position).setSkillcoin();
                     long newExp = user.getPoke().getExp()+user.poke.level*19;
@@ -168,6 +183,11 @@ public class RaidEntered extends Activity {
                     narr.setText(mAdapter.getItem(position).getName()+" 스킬 사용!"+"\n"+mAdapter.getItem(position).getDamage()+"의 데미지를 입혔다!");
                     damage += attack;
                     raid_hp -= attack;
+                    Log.i("raid times1",user.getRaid_times()+"");
+                    user.setRaid_times(user.getRaid_times()-1);
+                    Log.i("raid times2",user.getRaid_times()+"");
+                    socketClient.notifyChange();
+                    prog.setProgress(raid_hp);
                     mAdapter.getItem(position).setStart(System.currentTimeMillis());
                     Log.i("skill cool start",mAdapter.getItem(position).getName()+mAdapter.getItem(position).getStart());
                 }

@@ -17,12 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class RaidGuildAdapter extends RecyclerView.Adapter<RaidGuildAdapter.CustomViewHolder> {
-    private ArrayList <String> mList;
+    private List<Map.Entry<String, Integer>> mList;
     private Context context;
     private User user;
-    public RaidGuildAdapter(Context context, ArrayList<Skill> list) {
+    public RaidGuildAdapter(Context context, List<Map.Entry<String, Integer>> list) {
         this.context = context;
         this.mList = list;
     }
@@ -36,11 +38,11 @@ public class RaidGuildAdapter extends RecyclerView.Adapter<RaidGuildAdapter.Cust
             super(view);
             this.name = view.findViewById(R.id.name);
             this.rank = view.findViewById(R.id.rank);
-            this.damage_tot = view.findViewById(R.id.skillcost);
+            this.damage_tot = view.findViewById(R.id.damage_tot);
 
         }
     }
-    public void setmList(ArrayList<Skill> list){
+    public void setmList( List<Map.Entry<String, Integer>> list){
         this.mList = list;
         notifyDataSetChanged();
     }
@@ -57,18 +59,15 @@ public class RaidGuildAdapter extends RecyclerView.Adapter<RaidGuildAdapter.Cust
     /* Called when notifyItemChanged */
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
-        Skill data;
-        data = mList.get(position);
-        viewholder.name.setText(data.getName());
-        viewholder.level.setText("LV."+Integer.toString(data.getLevel()));
-        viewholder.bt.setText("cost: "+data.getSkillcoin()+"\n"+"power: "+data.getDamage());
-        Log.i("viewholder:",data.getName()+data.getLevel());
+        viewholder.name.setText(mList.get(position).getKey());
+        viewholder.rank.setText(Integer.toString(position+1));
+        viewholder.damage_tot.setText(Integer.toString(mList.get(position).getValue()));
     }
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);
     }
-    public Skill getItem(int position){ return mList.get(position);}
+    public Map.Entry<String, Integer> getItem(int position){ return mList.get(position);}
     @Override
     public long getItemId(int position) {
         return position;
