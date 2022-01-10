@@ -65,6 +65,14 @@ public class RaidActivity extends Fragment {
         socketClient = (SocketClient) getActivity().getApplicationContext();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        TextView cando = getActivity().findViewById(R.id.cando);
+        cando.setText(user.getRaid_times()+"/3");
+        Log.i("i'm in resume","haha");
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

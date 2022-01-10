@@ -180,8 +180,6 @@ public class RaidEntered extends Activity {
                         public void run() {
                             if(getApplicationContext() != null){
                                 //boss.setVisibility(View.INVISIBLE);
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
                                 finish();
                             }
                         }
@@ -210,7 +208,6 @@ public class RaidEntered extends Activity {
             @Override
             public void run() {
                 if(getApplicationContext() != null){
-
                     //boss.setVisibility(View.INVISIBLE);
                     narr.setText("총 "+damage+"의 데미지를 입혔다!");
                     finish();
@@ -218,6 +215,31 @@ public class RaidEntered extends Activity {
             }
         }, 10000);
 
+    }
+    @Override
+    public void onBackPressed() {
+        exitRaid();
+    }
+    public void exitRaid(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(RaidEntered.this);
+        builder.setMessage("레이드를 나가시겠습니까?(횟수가 차감되지 않습니다.)");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                RaidEntered.super.onBackPressed();
+                finish();
+                //socketClient.
+            }
+        });
+        builder.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

@@ -185,7 +185,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         setResult(RESULT_OK);
-        super.onBackPressed();
+        exitGame();
     }
     @Override
     protected void onDestroy() {
@@ -226,6 +226,28 @@ public class MainActivity extends FragmentActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("쉬는 동안 " + socketClient.addCoin + "코인 획득");
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void exitGame(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("게임을 그만하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //socketClient
+                MainActivity.super.onBackPressed();
+                finishAffinity();
+            }
+        });
+        builder.setNegativeButton("취소",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
