@@ -4,32 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/adventure_back"
     tools:context=".LoginActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
 
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:id="@+id/loginImages"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/loginButton"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-        </Button>
-<!--        <com.google.android.gms.common.SignInButton-->
-<!--            android:id="@+id/sign_in_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content" />-->
+            android:src="@drawable/ic_pokemon_logo"/>
+
 
     </LinearLayout>
 
@@ -41,20 +35,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="5">
 
-        <Button
-            android:id="@+id/kakaoTalkLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="카카오톡 로그인">
-        </Button>
-        <Button
-            android:id="@+id/kakaoAccountLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="카카오계정 로그인">
-        </Button>
+<!--        <Button-->
+<!--            android:id="@+id/kakaoAccountLogin"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="카카오계정 로그인">-->
+<!--        </Button>-->
 
     </LinearLayout>
 
@@ -66,21 +55,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
+<!--        <Button-->
+<!--            android:id="@+id/kakaoLogout"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="카카오 로그아웃">-->
+<!--        </Button>-->
+
         <Button
-            android:id="@+id/kakaoLogout"
+            android:id="@+id/kakaoTalkLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="카카오 로그아웃">
+            android:background="@drawable/kakao_login_medium_wide">
         </Button>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="179dp"
-        tools:layout_editor_absoluteY="215dp"
-        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

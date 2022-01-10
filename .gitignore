@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+goorm.manifest
+
+.env
+/server/node_modules

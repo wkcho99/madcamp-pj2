@@ -3,7 +3,7 @@
     <translate
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:duration="1000"
-        android:repeatCount = "1"
+        android:repeatCount = "0"
         android:fromYDelta="-50%"
         android:toYDelta="0">
     </translate>

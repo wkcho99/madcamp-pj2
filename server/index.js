@@ -98,7 +98,6 @@ function getRaidRanking(socket){
 
 function register(obj, socket){
 	
-	
 	var userInfo = {};
   	var pokemonInfo = {};
 	

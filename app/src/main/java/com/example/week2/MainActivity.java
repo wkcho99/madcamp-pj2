@@ -1,11 +1,14 @@
 package com.example.week2;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,33 +24,80 @@ import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.Account;
 import com.kakao.sdk.user.model.Profile;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends FragmentActivity {
-    String userId;
-    String nickname;
+    Long coin;
+    Integer level;
+    double exp;
+    double expper;
+    int frag = 0;
+    User user;
+    SocketClient socketClient;
+    TextView levelview;
+    TextView coinview;
+    TextView expview;
+
+    Button logout, train, adventure, raid;
+    ProgressBar prog;
+    TrainActivity fragment1;
+    AdventureActivity fragment2;
+    RaidActivity fragment3;
+    AdventureActivity2 fragment4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(new GameView(this));
-        Intent intent = getIntent();
-        //Log.i("after sending",nickname);
-        nickname = intent.getStringExtra("nickname");
+        socketClient = (SocketClient) getApplicationContext();
+
         setContentView(R.layout.activity_main);
 
-        Button logout = findViewById(R.id.logout);
-        Button train = findViewById(R.id.train);
-        Button adventure = findViewById(R.id.adventure);
-        Button raid = findViewById(R.id.raid);
+        user = socketClient.getUser();
+
+
+        logout = findViewById(R.id.logout);
+        train = findViewById(R.id.train);
+        adventure = findViewById(R.id.adventure);
+        raid = findViewById(R.id.raid);
+        levelview = findViewById(R.id.level);
+        coinview = findViewById(R.id.coin);
+        expview = findViewById(R.id.exp);
+        prog = findViewById(R.id.progressBar);
+
+        fragment1 = new TrainActivity();
+        fragment2 = new AdventureActivity();
+        fragment3 = new RaidActivity();
+        fragment4 = new AdventureActivity2();
+
+
+        Log.i("mainactivity user info",user.toString());
+
+        logout = findViewById(R.id.logout);
+        train = findViewById(R.id.train);
+        adventure = findViewById(R.id.adventure);
+        raid = findViewById(R.id.raid);
 
         TrainActivity fragment1 = new TrainActivity();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user",user);
+
         AdventureActivity fragment2 = new AdventureActivity();
         RaidActivity fragment3 = new RaidActivity();
+        fragment3.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main,fragment1).commit();
-        TextView nick = findViewById(R.id.nickname);
-        nick.setText(nickname);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         logout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +116,8 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "트레인 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 transaction.replace(R.id.fragment_main,fragment1);
-                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
@@ -76,8 +126,8 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "레이드 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 transaction.replace(R.id.fragment_main,fragment3);
-                transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
@@ -85,15 +135,33 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View v){
                 Toast.makeText(getApplicationContext(), "어드벤처 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main,fragment2);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                onFragmentChange(frag);
+//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_main,fragment2);
+//                transaction.commit();
             }
         });
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        coin = user.getCoin();
+        level = user.poke.getLevel();
+        exp = user.poke.getExp();
+
+        levelview.setText("Lv."+level);
+        coinview.setText(""+coin);
+        expper = exp*100/(Math.pow(user.poke.level,2)*100);
+        expview.setText(String.format("%.2f%%", user.getPoke().getExp()*100/(Math.pow(user.getPoke().level,2)*100)));
+        prog.setProgress((int)Math.round(expper));
+
+
+    }
+
     @Override
     protected void onStop() {
         setResult(RESULT_OK);
@@ -108,5 +176,34 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         setResult(RESULT_OK);
         super.onDestroy();
+        Log.i("socketIO", "destroy");
+        socketClient.disconnect();
+    }
+    public void onFragmentChange(int index){
+        if(index == 0){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment2);
+            frag = 0;
+            transaction.commit();
+        }
+        if(index == 1){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment4);
+            frag = 1;
+            transaction.commit();
+        }
+        if(index == 3){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            transaction.replace(R.id.fragment_main,fragment3);
+            frag = 3;
+            transaction.commit();
+        }
+
     }
 }
