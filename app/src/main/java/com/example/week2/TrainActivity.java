@@ -61,6 +61,7 @@ public class TrainActivity extends Fragment {
 
         View root = inflater.inflate(R.layout.train_activity, container, false);
         user = socketClient.getUser();
+        addrList.clear();
         for(int i = 0; i<user.getPoke().getSkills().size();i++)
         {
             addrList.add(user.getPoke().getSkills().get(i));
@@ -141,7 +142,7 @@ public class TrainActivity extends Fragment {
             }
             user.setCoin(user.getCoin() - s.getSkillcoin());
 
-                user.getPoke().getSkills().get(position).setPower(s.getPower()+position+1);
+                user.getPoke().getSkills().get(position).setDamage(s.getPower()+position+1);
             user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
                 user.getPoke().getSkills().get(position).setSkillcoin();
                 long newExp = user.getPoke().getExp()+(position+1)*user.getPoke().getSkills().get(position).getLevel();

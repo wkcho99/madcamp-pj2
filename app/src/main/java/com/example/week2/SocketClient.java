@@ -153,7 +153,7 @@ public class SocketClient extends Application {
     public void notifyChange(){
         try {
             JSONObject obj = new JSONObject(user.toString());
-            //Log.i("socketIO change", String.valueOf(obj));
+            Log.i("socketIO change", String.valueOf(obj));
 
             mSocket.emit("change", obj);
         } catch (JSONException e) {

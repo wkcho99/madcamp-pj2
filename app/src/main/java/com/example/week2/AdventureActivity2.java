@@ -63,6 +63,7 @@ public class AdventureActivity2 extends Fragment {
         }
         mAdapter = new AdventureAdapter(context, addrList);
         mob_hp = user.getPoke().getLevel()*10;
+        Log.i("adventure", ""+mob_hp + " " + user.getPoke().getSkills().get(0).getDamage());
         return root;
         //return new GameView(getActivity());
 
@@ -139,7 +140,7 @@ public class AdventureActivity2 extends Fragment {
 
             @Override
                     public void onUpClick2(View v, int position) {
-            int attack = mAdapter.getItem(position).getPower();
+            int attack = mAdapter.getItem(position).getDamage();
             Long passT = ((System.currentTimeMillis() - mAdapter.getItem(position).getStart()));
                 Log.i("skill cool check",mAdapter.getItem(position).getName()+passT);
             if(passT<mAdapter.getItem(position).getCool()*1000){
@@ -168,7 +169,7 @@ public class AdventureActivity2 extends Fragment {
                             Log.i("evolution", "" + user.getPoke().getNumber());
                             TrainActivity.setMy_poke(adventure_poke2, user.getPoke().getNumber());
                         }
-                        socketClient.notifyChange();
+
                     }
                 }
                 user.getPoke().setExp(newExp);
@@ -180,7 +181,10 @@ public class AdventureActivity2 extends Fragment {
                 expView.setText(String.format("%.2f%%", expper));
                 ProgressBar prog = getActivity().findViewById(R.id.progressBar);
                 prog.setProgress((int)Math.round(expper));
+                TextView levelView = getActivity().findViewById(R.id.level);
+                levelView.setText("Lv."+user.getPoke().getLevel());
                 getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                socketClient.notifyChange();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

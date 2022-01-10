@@ -10,6 +10,7 @@ public class Skill implements Serializable {
     int level;
     int power;
     Long start;
+    int damage;
 
     public Long getStart() {
         return start;
@@ -43,6 +44,7 @@ public class Skill implements Serializable {
         this.power = power;
         this.skillcoin = 0;
         this.start = (long)0;
+        this.damage = (this.id % 10 ) * this.level + this.power;
         setSkillcoin();
     }
 
@@ -76,6 +78,14 @@ public class Skill implements Serializable {
 
     public void setPower(int power) {
         this.power = power;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     @Override
