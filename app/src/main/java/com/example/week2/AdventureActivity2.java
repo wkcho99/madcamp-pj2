@@ -42,7 +42,7 @@ public class AdventureActivity2 extends Fragment {
     private ContentResolver contentResolver;
     private AnimationDrawable animationDrawable;
     SocketClient socketClient;
-
+    int[] images = new int[] {R.drawable.mob1, R.drawable.mob2, R.drawable.mob3, R.drawable.mob4, R.drawable.mob5, R.drawable.mob6};
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +115,8 @@ public class AdventureActivity2 extends Fragment {
         mRecyclerView = view.findViewById(R.id.recyclerview_list2);
         ImageView adventure_back = view.findViewById(R.id.adventure_back2);
         ImageView mob = view.findViewById(R.id.mob);
+        int imageId = (int)(Math.random() * images.length);
+        mob.setImageResource(images[imageId]);
         mob.setVisibility(View.VISIBLE);
         ImageView adventure_poke2 = view.findViewById(R.id.adventure_poke2);
         TextView narr = view.findViewById(R.id.narr);

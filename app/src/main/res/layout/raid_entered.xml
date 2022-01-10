@@ -16,28 +16,20 @@
             android:layout_weight="3">
 
             <ImageView
-                android:id="@+id/adventure_back2"
+                android:id="@+id/raid_back"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/adventure_back5" />
+                android:background="@drawable/raid_back2" />
 
             <ImageView
-                android:id="@+id/mob"
-                android:layout_width="300sp"
-                android:layout_height="180sp"
+                android:id="@+id/boss"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="170sp"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:layout_marginTop="0sp"
-                android:src="@drawable/mob2"
-                android:visibility="invisible" />
-
-            <ImageView
-                android:id="@+id/adventure_poke2"
-                android:layout_width="150sp"
-                android:layout_height="150sp"
-                android:layout_marginTop="150sp"
-                android:src="@drawable/pokemon1" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="220sp"
+                android:src="@drawable/boss_3d" />
 
         </RelativeLayout>
         <RelativeLayout
@@ -51,24 +43,24 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/dialog" />
 
-        <TextView
-            android:id="@+id/narr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/white"
-            android:fontFamily="@font/pokemon_font"
-            android:text="사냥감을 발견했다!"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textAlignment="gravity"
-            android:textSize="14pt"
-            android:backgroundTint="@android:color/transparent"
-            />
+            <TextView
+                android:id="@+id/narr2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@color/white"
+                android:fontFamily="@font/pokemon_font"
+                android:text="전설의 포켓몬 디아루가가 나타났다!"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textAlignment="gravity"
+                android:textSize="12pt"
+                android:backgroundTint="@android:color/transparent"
+                />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_list2"
+            android:id="@+id/recyclerview_list3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2">
