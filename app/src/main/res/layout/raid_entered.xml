@@ -31,6 +31,17 @@
                 android:layout_marginTop="220sp"
                 android:src="@drawable/boss_3d" />
 
+
+            <ProgressBar
+                android:id="@+id/progressBar3"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="80sp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+
+                />
+
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,16 +58,13 @@
                 android:id="@+id/narr2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_marginLeft="18sp"
+                android:layout_marginTop="5sp"
                 android:background="@color/white"
+                android:backgroundTint="@android:color/transparent"
                 android:fontFamily="@font/pokemon_font"
                 android:text="전설의 포켓몬 디아루가가 나타났다!"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textAlignment="gravity"
-                android:textSize="12pt"
-                android:backgroundTint="@android:color/transparent"
-                />
+                android:textSize="8pt" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -67,6 +67,7 @@ public class SocketClient extends Application {
                         user.setGuild(data.getInt("guild"));
                         user.setEndTime(data.getLong("end_time"));
                         Log.i("userInfo received", user.toString());
+                        Log.i("socketIO", pokemon.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -36,6 +36,7 @@ public class AdventureActivity2 extends Fragment {
     private GridLayoutManager mGridManager;
     private Context context;
     User user;
+    ProgressBar prog;
     private int mob_hp;
     private AdventureAdapter mAdapter;
     MainActivity activity;
@@ -58,16 +59,27 @@ public class AdventureActivity2 extends Fragment {
         //Glide.with(this).load(R.raw.adventure).into(adventure_back);
         //root.setContentView(new MyGameView(this));
         user = socketClient.getUser();
+        addrList.clear();
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }
         mAdapter = new AdventureAdapter(context, addrList);
-        mob_hp = user.getPoke().getLevel()*10;
         Log.i("adventure", ""+mob_hp + " " + user.getPoke().getSkills().get(0).getDamage());
         return root;
         //return new GameView(getActivity());
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mob_hp = user.getPoke().getLevel()*10;
+        prog = getActivity().findViewById(R.id.progressBar2);
+        prog.setMax(mob_hp);
+        prog.setProgress(mob_hp);
+        updateData();
+    }
+
     private void updateData(){
         addrList.clear();
 //        skill1.setCool(5.0f);
@@ -80,6 +92,7 @@ public class AdventureActivity2 extends Fragment {
                 addrList.add(user.getPoke().getSkills().get(i));
             }
         }
+        mob_hp = user.getPoke().getLevel()*10;
         //mAdapter.setmList2(addrList);
         mAdapter.notifyDataSetChanged();
     }
@@ -118,8 +131,15 @@ public class AdventureActivity2 extends Fragment {
         int imageId = (int)(Math.random() * images.length);
         mob.setImageResource(images[imageId]);
         mob.setVisibility(View.VISIBLE);
+        mob_hp = user.getPoke().getLevel()*10;
+        prog = view.findViewById(R.id.progressBar2);
+        prog.setMax(mob_hp);
+        prog.setProgress(mob_hp);
         ImageView adventure_poke2 = view.findViewById(R.id.adventure_poke2);
         TextView narr = view.findViewById(R.id.narr);
+//        ProgressBar prog = view.findViewById(R.id.progressBar2);
+//        prog.setMax(mob_hp);
+//        prog.setProgress(mob_hp);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mGridManager);
         updateData();
@@ -153,12 +173,14 @@ public class AdventureActivity2 extends Fragment {
             else if((mob_hp-attack)<=0)
             {
                 //몬스터 죽음
+                mob_hp = 0;
+                prog.setProgress(mob_hp);
                 mob.startAnimation(die);
                 Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
                 user.setCoin(newcoin);
                 user.getPoke().getSkills().get(position).setSkillcoin();
                 long newExp = user.getPoke().getExp()+user.poke.level*19;
-                narr.setText("사냥감을 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ "\n"+user.poke.level*19+" 경험치 획득");
+                narr.setText("사냥감을 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ ","+user.poke.level*19+" 경험치 획득");
                 if(newExp >= Math.pow(user.getPoke().level,2)*100){
                     while(newExp >= Math.pow(user.getPoke().level,2)*100) {
 
@@ -167,7 +189,7 @@ public class AdventureActivity2 extends Fragment {
                         narr.setText("포켓몬의 레벨이 상승했다!");
                         if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
                             user.getPoke().setNumber(user.getPoke().getNumber() + 1);
-                            narr.setText("포켓몬이 진화했다!");
+                            narr.setText("포켓몬의 레벨이 상승했다!"+"포켓몬이 진화했다!");
                             Log.i("evolution", "" + user.getPoke().getNumber());
                             TrainActivity.setMy_poke(adventure_poke2, user.getPoke().getNumber());
                         }
@@ -202,6 +224,7 @@ public class AdventureActivity2 extends Fragment {
                 narr.setText(mAdapter.getItem(position).getName()+" 스킬 사용!");
                 mob.startAnimation(attacked);
                 mob_hp -= attack;
+                prog.setProgress(mob_hp);
                 mAdapter.getItem(position).setStart(System.currentTimeMillis());
                 Log.i("skill cool start",mAdapter.getItem(position).getName()+mAdapter.getItem(position).getStart());
             }
