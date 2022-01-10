@@ -36,9 +36,9 @@ public class SocketClient extends Application {
     private Pokemon pokemon;
     private long timeReward;
 
-    private MutableLiveData<JSONArray> raidInfo;
-    private MutableLiveData<Integer> raidCnt;
-    private MutableLiveData<Integer> bossHp;
+    public MutableLiveData<JSONArray> raidInfo;
+    public MutableLiveData<Integer> raidCnt;
+    public MutableLiveData<Integer> bossHp;
     public long addCoin;
 
 
@@ -60,6 +60,10 @@ public class SocketClient extends Application {
         instance = this;
         KakaoSdk.init(this, getString(R.string.kakaoApi));
         user = new User(null, null, null, 0,0,0,0,3);
+
+        raidInfo = new MutableLiveData<>();
+        raidCnt = new MutableLiveData<>();
+        bossHp = new MutableLiveData<>();
 
         try {
             mSocket = IO.socket(getString(R.string.serverAddr));
@@ -149,8 +153,9 @@ public class SocketClient extends Application {
                 @Override
                 public void call(Object... args) {
                     String data = (String) args[0];
-                    //Log.i("raidCnt", data);
-                    bossHp.postValue(Integer.parseInt(data));
+                    Log.i("bossHp", String.valueOf(bossHp.getValue()));
+                    if(bossHp != null)
+                        bossHp.postValue(Integer.parseInt(data));
                 }
             });
 
@@ -233,8 +238,7 @@ public class SocketClient extends Application {
     public void requestRaidInfo(MutableLiveData<JSONArray> raidInfo, MutableLiveData<Integer> raidCnt){
 
         mSocket.emit("raid");
-        this.raidInfo = raidInfo;
-        this.raidCnt = raidCnt;
+
     }
 
     public void requestBossInfo(MutableLiveData<Integer> bossHp){
@@ -245,7 +249,6 @@ public class SocketClient extends Application {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.bossHp = bossHp;
     }
 
     public void sendRaidDamage(int damage){

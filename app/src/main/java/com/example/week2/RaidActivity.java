@@ -65,6 +65,9 @@ public class RaidActivity extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         socketClient = (SocketClient) getActivity().getApplicationContext();
+        liveData = socketClient.raidInfo;
+        raidCnt = socketClient.raidCnt;
+        raid_hp = socketClient.bossHp;
     }
 
     @Override
@@ -81,9 +84,6 @@ public class RaidActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.raid_activity, container, false);
-        liveData = new MutableLiveData<>();
-        raidCnt = new MutableLiveData<>();
-        raid_hp = new MutableLiveData<>();
 
         socketClient.requestBossInfo(raid_hp);
         socketClient.requestRaidInfo(liveData, raidCnt);
@@ -147,10 +147,11 @@ public class RaidActivity extends Fragment {
         raid_hp.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if (raid_hp == null || raid_hp.getValue() == 0) {
+                if (raid_hp == null || raid_hp.getValue() == null || raid_hp.getValue() == 0) {
                     bt.setEnabled(false);
-                } else
+                } else {
                     bt.setEnabled(true);
+                }
             }
         });
 //        raid_first.startAnimation(bigger);
@@ -198,6 +199,7 @@ public class RaidActivity extends Fragment {
                     return;
                 }
                 Intent intent = new Intent(getActivity(), RaidEntered.class);
+                Log.i("intent hp", raid_hp.getValue()+"");
                 intent.putExtra("raid_hp",raid_hp.getValue());
                 startActivity(intent);
             }

@@ -41,7 +41,7 @@ public class RaidEntered extends Activity {
     private GridLayoutManager mGridManager;
     private Context context;
     User user;
-    private int raid_hp= 1000;
+    private int raid_hp;
     private RaidEnteredAdapter mAdapter;
     MainActivity activity;
     private ContentResolver contentResolver;
@@ -73,6 +73,9 @@ public class RaidEntered extends Activity {
 
     @Override
     public void onResume() {
+        raid_hp = getIntent().getIntExtra("raid_hp", 10000);
+        Log.i("resume hp", ""+raid_hp);
+
         super.onResume();
         prog = findViewById(R.id.progressBar3);
         prog.setProgress(raid_hp);
@@ -82,6 +85,8 @@ public class RaidEntered extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        raid_hp = getIntent().getIntExtra("raid_hp", 10000);
+        Log.i("create hp", ""+raid_hp);
         contentResolver = getContentResolver();
         socketClient = (SocketClient) getApplicationContext();
         user = socketClient.getUser();
@@ -104,7 +109,7 @@ public class RaidEntered extends Activity {
         boss.setVisibility(View.VISIBLE);
         TextView narr = findViewById(R.id.narr2);
         prog = findViewById(R.id.progressBar3);
-        prog.setMax(raid_hp);
+        prog.setMax(10000);
         prog.setProgress(raid_hp);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mGridManager);
