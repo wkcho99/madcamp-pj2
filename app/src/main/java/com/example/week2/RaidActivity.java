@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,17 +20,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.bumptech.glide.Glide;
-import com.kakao.sdk.user.UserApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class RaidActivity extends Fragment {
     private AnimationDrawable animationDrawable;
     private SocketClient socketClient;
-    private MutableLiveData<JSONArray> liveData;
+    private MutableLiveData<JSONArray> raidInfo;
+    private MutableLiveData<Integer> raidCnt;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,17 +42,21 @@ public class RaidActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.raid_activity, container, false);
 
-        liveData = new MutableLiveData<>();
-        socketClient.requestRaidInfo(liveData);
+        raidInfo = new MutableLiveData<>();
+        raidCnt = new MutableLiveData<>();
+        socketClient.requestRaidInfo(raidInfo, raidCnt);
 
-        liveData.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
+        raidInfo.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
             @Override
             public void onChanged(JSONArray jsonArray) {
-                try {
-                    Log.i("raidActivity", ((JSONObject) liveData.getValue().get(1)).getString("guild"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Log.i("raidActivity", ((JSONArray) raidInfo.getValue()).toString());
+            }
+        });
+
+        raidCnt.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Log.i("raidActivity raid cnt", " " + raidCnt.getValue());
             }
         });
 

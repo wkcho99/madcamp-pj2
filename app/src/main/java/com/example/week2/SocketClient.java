@@ -30,6 +30,8 @@ public class SocketClient extends Application {
     private Pokemon pokemon;
 
     private MutableLiveData<JSONArray> raidInfo;
+    private MutableLiveData<Integer> raidCnt;
+
     //Map<String,Integer> guild_member = new HashMap<>();
     ArrayList<String> pokemon_list = new ArrayList<>(Arrays.asList(
             "모부기", "수풀부기", "토대부기", "불꽃숭이", "파이숭이", "초염몽", "팽도리", "팽태자", "엠페르트"
@@ -47,7 +49,7 @@ public class SocketClient extends Application {
         super.onCreate();
         instance = this;
         KakaoSdk.init(this, getString(R.string.kakaoApi));
-        user = new User(null, null, null, 0,null,0,0,3);
+        user = new User(null, null, null, 0,0,0,0,3);
 
         try {
             mSocket = IO.socket(getString(R.string.serverAddr));
@@ -56,15 +58,15 @@ public class SocketClient extends Application {
                 @Override
                 public void call(Object... args) {
                     JSONObject data = (JSONObject) args[0];
-
                     try {
                         user.setUser_id(data.getString("user_id"));
                         user.setCoin(data.getLong("coin"));
                         pokemon = parsePokemon(data.getJSONObject("pokemon"));
                         user.setPoke(pokemon);
                         user.setName(data.getString("name"));
-                        user.setGuild(data.getString("guild"));
-                        Log.i("socketIO", pokemon.toString());
+                        user.setGuild(data.getInt("guild"));
+                        user.setEndTime(data.getLong("end_time"));
+                        Log.i("userInfo received", user.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -108,6 +110,16 @@ public class SocketClient extends Application {
                     JSONArray data = (JSONArray) args[0];
                     Log.i("raidInfo", data.toString());
                     raidInfo.postValue(data);
+                }
+            });
+
+            mSocket.on("raidCnt", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    String data = (String) args[0];
+                    //Log.i("raidCnt", data);
+                    raidCnt.postValue(Integer.parseInt(data));
+
                 }
             });
 
@@ -161,7 +173,7 @@ public class SocketClient extends Application {
     public void requestUserInfo(String kakaoId){
         mSocket.connect();
         try {
-            user = new User(null, null, null, 0, null,0,0,3);
+            user = new User(null, null, null, 0, 0,0,0,3);
             mSocket.emit("userInfo", new JSONObject("{\"user_id\":\""+kakaoId+"\"}"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -180,7 +192,7 @@ public class SocketClient extends Application {
         try {
             user.setEndTime(System.currentTimeMillis());
             JSONObject obj = new JSONObject(user.toString());
-            Log.i("socketIO change", String.valueOf(obj));
+            Log.i("socketIO change", obj.toString());
 
             mSocket.emit("change", obj);
         } catch (JSONException e) {
@@ -189,10 +201,11 @@ public class SocketClient extends Application {
 
     }
 
-    public void requestRaidInfo(MutableLiveData<JSONArray> raidInfo){
+    public void requestRaidInfo(MutableLiveData<JSONArray> raidInfo, MutableLiveData<Integer> raidCnt){
 
         mSocket.emit("raid");
         this.raidInfo = raidInfo;
+        this.raidCnt = raidCnt;
     }
 
     public void disconnect(){
