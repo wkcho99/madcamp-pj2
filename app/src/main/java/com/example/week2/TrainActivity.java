@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 public class TrainActivity extends Fragment {
     private ArrayList<Skill> addrList = new ArrayList<Skill>();
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
+    private GridLayoutManager mGridManager;
     private Context context;
     User user;
     SocketClient socketClient;
@@ -109,7 +110,7 @@ public class TrainActivity extends Fragment {
         contentResolver = getActivity().getContentResolver();
         mAdapter = new TrainAdapter(context, addrList);
         final Animation skillupanim = AnimationUtils.loadAnimation(context,R.anim.skill_level_up);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mGridManager = new GridLayoutManager(context, 2);
         mRecyclerView = view.findViewById(R.id.recyclerview_list);
         my_poke = view.findViewById(R.id.train_poke);
         Log.i("user pokemon number", user.getPoke().getNumber()+"");
@@ -119,10 +120,13 @@ public class TrainActivity extends Fragment {
         //train_back.setImageResource(R.drawable.home);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(mGridManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                mLayoutManager.getOrientation());
+                mGridManager.HORIZONTAL);
+        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(mRecyclerView.getContext(),
+                mGridManager.VERTICAL);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.addItemDecoration(dividerItemDecoration2);
         setMy_poke(my_poke,user.getPoke().getNumber());
         mAdapter.setOnItemCLickListener(new TrainAdapter.OnItemClickListener() {
             @Override

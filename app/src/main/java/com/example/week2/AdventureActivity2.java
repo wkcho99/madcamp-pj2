@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class AdventureActivity2 extends Fragment {
     private RecyclerView mRecyclerView;
     private GridLayoutManager mGridManager;
     private Context context;
+    MediaPlayer mediaPlayer;
     User user;
     ProgressBar prog;
     private int mob_hp;
@@ -64,6 +66,11 @@ public class AdventureActivity2 extends Fragment {
             addrList.add(user.getPoke().getSkills().get(i));
         }
         mAdapter = new AdventureAdapter(context, addrList);
+        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.battle);
+        if(mediaPlayer!=null){
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
         Log.i("adventure", ""+mob_hp + " " + user.getPoke().getSkills().get(0).getDamage());
         return root;
         //return new GameView(getActivity());
@@ -73,6 +80,7 @@ public class AdventureActivity2 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         mob_hp = user.getPoke().getLevel()*10;
         prog = getActivity().findViewById(R.id.progressBar2);
         prog.setMax(mob_hp);
@@ -99,11 +107,27 @@ public class AdventureActivity2 extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
+        if(mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
+        if(mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     @Override
@@ -174,6 +198,14 @@ public class AdventureActivity2 extends Fragment {
             {
                 //몬스터 죽음
                 mob_hp = 0;
+                if(mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                }
+                if(mediaPlayer != null) {
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                }
                 prog.setProgress(mob_hp);
                 mob.startAnimation(die);
                 Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;

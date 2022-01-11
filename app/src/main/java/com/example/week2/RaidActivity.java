@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RadialGradient;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,7 +56,6 @@ public class RaidActivity extends Fragment {
     private SocketClient socketClient;
     Button bt;
     private MutableLiveData<Integer> raidCnt;
-
     private MutableLiveData<JSONArray> liveData;
     User user;
     private Context context;
