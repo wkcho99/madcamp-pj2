@@ -101,7 +101,7 @@ public class RaidEntered extends Activity {
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }
-        mAdapter = new RaidEnteredAdapter(this, addrList, (user.getPoke().getNumber()-1)/3);
+        mAdapter = new RaidEnteredAdapter(this, addrList, (user.getPoke().getNumber())/3);
         mediaPlayer = MediaPlayer.create(this, R.raw.raid);
         if(mediaPlayer!=null){
             mediaPlayer.setLooping(true);
