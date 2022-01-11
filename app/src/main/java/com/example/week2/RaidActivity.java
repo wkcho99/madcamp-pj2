@@ -96,7 +96,6 @@ public class RaidActivity extends Fragment {
         TextView txt2 = root.findViewById(R.id.rank2);
         txt2.setPaintFlags(txt2.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         bt = root.findViewById(R.id.start_bt);
-        bt.setEnabled(false);
         user = socketClient.getUser();
         liveData.observe(getViewLifecycleOwner(), new Observer<JSONArray>() {
             @Override
@@ -164,7 +163,7 @@ public class RaidActivity extends Fragment {
         raid_hp.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if (raid_hp == null || raid_hp.getValue() == null || raid_hp.getValue() == 0) {
+                if (raid_hp == null || raid_hp.getValue() == null ) {
                     bt.setEnabled(false);
                 } else {
                     bt.setEnabled(true);
