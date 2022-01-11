@@ -79,14 +79,17 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
         data = mList.get(position);
         viewholder.name.setText(data.getName());
         viewholder.level.setText("LV."+Integer.toString(data.getLevel()));
-        viewholder.bt.setText("cost: "+data.getSkillcoin()+1+"\n"+"power: "+data.getDamage());
         Log.i("viewholder:",data.getName()+data.getLevel());
     }
     @Override
     public int getItemCount() {
         return (null != mList ? mList.size() : 0);
     }
-    public Skill getItem(int position){ return mList.get(position);}
+    public Skill getItem(int position){
+        if(position < 0)
+            return mList.get(0);
+        return mList.get(position);
+    }
     @Override
     public long getItemId(int position) {
         return position;

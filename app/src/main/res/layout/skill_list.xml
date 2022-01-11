@@ -25,16 +25,17 @@
     <LinearLayout
         android:layout_marginStart="10dp"
         android:paddingTop="15dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="8dp"
         android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:orientation="vertical"
         android:layout_weight="1"
+        android:id="@+id/linearlayout"
         tools:ignore="MissingConstraints">
 
             <TextView
                 android:id="@+id/skill_name"
-                android:layout_width="230sp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:paddingStart="5dp"
@@ -48,8 +49,8 @@
 
             <TextView
                 android:id="@+id/skill_level"
-                android:layout_width="100sp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:includeFontPadding="false"
                 android:paddingTop="5dp"
                 android:paddingStart="5dp"
@@ -64,16 +65,17 @@
 
     <Button
         android:id="@+id/skillcost"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="15sp"
         android:layout_marginBottom="5dp"
-        android:text="100Gold"
         android:textSize="6pt"
         android:gravity="center"
+        android:shadowRadius="1"
+        android:background="@drawable/uparrows"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

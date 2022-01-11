@@ -28,7 +28,8 @@ public class RaidEnteredAdapter extends RecyclerView.Adapter<RaidEnteredAdapter.
     }
 
     public interface OnItemClickListener3 {
-        void onUpClick3(int position);
+        void onUpClick3(View v, int position);
+        void onItemClick3(View v, int position, View itemView);
     }
 
     public void setOnItemCLickListener3(RaidEnteredAdapter.OnItemClickListener3 listener) {
@@ -51,18 +52,18 @@ public class RaidEnteredAdapter extends RecyclerView.Adapter<RaidEnteredAdapter.
             params.width = buttonWidth;
             params.leftMargin = buttonWidth;
             bt.setLayoutParams(params);
-            bt.setText("사용");
+            bt.setVisibility(View.INVISIBLE);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //mListener.onItemClick3(view, getAdapterPosition(), view);
+                    mListener.onItemClick3(view, getAdapterPosition(),view);
                 }
             });
             bt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //스킬 레벨업
-                    mListener.onUpClick3(getAdapterPosition());
+                    mListener.onUpClick3(view,getAdapterPosition());
                 }
             });
         }
