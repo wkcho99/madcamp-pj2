@@ -9,7 +9,8 @@
     android:layout_marginTop="4dp"
     android:layout_marginRight="10dp"
     android:layout_marginBottom="4dp"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
     <!--    <ImageView-->
     <!--        android:id="@+id/imageView6"-->
@@ -27,10 +28,13 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="5dp"
-        android:textSize="14pt"
+        android:textSize="12pt"
         android:text="1"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
         <TextView
             android:id="@+id/name"
@@ -38,27 +42,49 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginTop="4sp"
             android:gravity="center"
             android:padding="5dp"
             android:text="name"
-            android:textSize="10pt"
-            android:textStyle="bold"
+            android:textSize="8pt"
+            android:textColor="@color/white"
             app:layout_constraintLeft_toRightOf="@+id/rank"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
+
+    <ProgressBar
         android:id="@+id/damage_tot"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="10000"
-        android:textSize="6pt"
         app:layout_constraintLeft_toRightOf="@+id/name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/damage_tot2"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="1201"
+        android:textSize="6pt"
+        android:layout_marginRight="15sp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@+id/name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

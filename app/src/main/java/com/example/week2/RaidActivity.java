@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -17,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,7 +90,10 @@ public class RaidActivity extends Fragment {
 
         socketClient.requestBossInfo(raid_hp);
         socketClient.requestRaidInfo(liveData, raidCnt);
-
+        TextView txt = root.findViewById(R.id.rank1);
+        txt.setPaintFlags(txt.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        TextView txt2 = root.findViewById(R.id.rank2);
+        txt2.setPaintFlags(txt2.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         bt = root.findViewById(R.id.start_bt);
         bt.setEnabled(false);
         user = socketClient.getUser();

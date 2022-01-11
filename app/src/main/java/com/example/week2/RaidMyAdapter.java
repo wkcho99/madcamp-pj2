@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,12 +35,15 @@ public class RaidMyAdapter extends RecyclerView.Adapter<RaidMyAdapter.CustomView
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView name;
         protected TextView rank;
-        protected TextView damage_tot;
+        protected ProgressBar damage_tot;
+        protected TextView damage_tot2;
         public CustomViewHolder(View view) {
             super(view);
             this.name = view.findViewById(R.id.name);
             this.rank = view.findViewById(R.id.rank);
             this.damage_tot = view.findViewById(R.id.damage_tot);
+            this.damage_tot2 = view.findViewById(R.id.damage_tot2);
+            damage_tot.setMax(10000);
 
         }
     }
@@ -72,7 +76,8 @@ public class RaidMyAdapter extends RecyclerView.Adapter<RaidMyAdapter.CustomView
             viewholder.rank.setText(Integer.toString(position+1));
             ranks.add(position+1);
         }
-        viewholder.damage_tot.setText(Integer.toString(mList.get(position).getValue()));
+        viewholder.damage_tot.setProgress(mList.get(position).getValue());
+        viewholder.damage_tot2.setText(Integer.toString(mList.get(position).getValue()));
     }
     @Override
     public int getItemCount() {
