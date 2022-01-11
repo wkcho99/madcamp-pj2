@@ -6,16 +6,21 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class ServerThread extends Thread{
 
     SocketClient socketClient;
     LoginActivity loginActivity;
+    LinearLayout ll;
 
-    public ServerThread(LoginActivity loginActivity, SocketClient socketClient) {
+    public ServerThread(LoginActivity loginActivity, SocketClient socketClient, LinearLayout ll) {
         this.socketClient = socketClient;
         this.loginActivity = loginActivity;
+        this.ll = ll;
     }
 
     public void run(){
@@ -36,8 +41,6 @@ public class ServerThread extends Thread{
         if(user.getName() != null) {
             loginActivity.startActivity(0);
 
-
-
         } else if(time < 10){
             Log.i("register time", ""+time);
             loginActivity.startActivity(1);
@@ -48,6 +51,7 @@ public class ServerThread extends Thread{
                 @Override
                 public void run()
                 {
+                    ll.setVisibility(View.INVISIBLE);
                     Toast.makeText(loginActivity, "서버에 접속할 수 없습니다.", Toast.LENGTH_SHORT).show();
                     socketClient.disconnect();
                 }

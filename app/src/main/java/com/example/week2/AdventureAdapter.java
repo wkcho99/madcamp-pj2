@@ -47,6 +47,7 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
             params.leftMargin = buttonWidth;
             bt.setLayoutParams(params);
             bt.setText("사용");
+            bt.setVisibility(View.INVISIBLE);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

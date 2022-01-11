@@ -154,14 +154,15 @@ public class AdventureActivity2 extends Fragment {
         final Animation die = AnimationUtils.loadAnimation(getActivity(), R.anim.mob_die);
         final Animation attacked = AnimationUtils.loadAnimation(getActivity(), R.anim.mob_attacked);
             //mAdapter.setmList2(addrList);
+
             mAdapter.setOnItemCLickListener2(new AdventureAdapter.OnItemClickListener2() {
                 @Override
-                public void onItemClick2(View v, int position, View itemView) {
+                public void onUpClick2(View v, int position) {
                     modal(v, position);
                 }
 
             @Override
-                    public void onUpClick2(View v, int position) {
+                    public void onItemClick2(View v, int position, View itemView) {
             int attack = mAdapter.getItem(position).getDamage();
             Long passT = ((System.currentTimeMillis() - mAdapter.getItem(position).getStart()));
                 Log.i("skill cool check",mAdapter.getItem(position).getName()+passT);
@@ -244,7 +245,7 @@ public class AdventureActivity2 extends Fragment {
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
                         //((Activity) view.getContext()).finish();
                     }
                 }).show();

@@ -2,12 +2,18 @@ package com.example.week2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +32,12 @@ public class LoginActivity extends Activity {
     Button kakaoTalkLogin;
     // Button kakaoLogout;
     // Button kakaoAccountLogin;
-    LinearLayout linearLayout;
+    LinearLayout ll;
     ServerThread thread;
     Profile profile;
     String kakaoId;
+    private AnimationDrawable animationDrawable;
+    //ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,8 @@ public class LoginActivity extends Activity {
         kakaoTalkLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ll.setVisibility(View.VISIBLE);
+
                 if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(getBaseContext())) {
                     UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, (oAuthToken, error) -> {
                         if (error != null) {
@@ -98,6 +108,7 @@ public class LoginActivity extends Activity {
     }
 
     private void viewInit(){
+        ll = findViewById(R.id.linearLayout2);
         kakaoTalkLogin = findViewById(R.id.kakaoTalkLogin);
         //kakaoAccountLogin = findViewById(R.id.kakaoAccountLogin);
         //kakaoLogout = findViewById(R.id.kakaoLogout);
@@ -115,7 +126,7 @@ public class LoginActivity extends Activity {
                     kakaoId = Long.toString(user.getId());
                     User loginUser = new User(null, null, null, 0, 0, 0, 0, 3);
                     socketClient.setUser(loginUser);
-                    Toast.makeText(getApplicationContext(), "서버에 접속 중입니다.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "서버에 접속 중입니다.", Toast.LENGTH_SHORT).show();
                     socketClient.requestUserInfo(Long.toString(user.getId()));
 
 
@@ -124,7 +135,7 @@ public class LoginActivity extends Activity {
                         thread = null;
                     }
 
-                    thread = new ServerThread(this, socketClient);
+                    thread = new ServerThread(this, socketClient, ll);
                     thread.start();
                 }
             }
@@ -140,6 +151,7 @@ public class LoginActivity extends Activity {
 
     public void startActivity(int code){
 
+        ll.setVisibility(View.INVISIBLE);
         if(code == 0) {
             // game start
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

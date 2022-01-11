@@ -220,7 +220,7 @@ public class RaidActivity extends Fragment {
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(view.getContext(), "확인", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
     }

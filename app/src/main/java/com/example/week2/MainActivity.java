@@ -51,7 +51,8 @@ public class MainActivity extends FragmentActivity {
     TextView coinview;
     TextView expview;
 
-    Button logout, train, adventure, raid;
+    Button train, adventure, raid;
+    //Button logout;
     ProgressBar prog;
     TrainActivity fragment1;
     AdventureActivity fragment2;
@@ -68,7 +69,7 @@ public class MainActivity extends FragmentActivity {
         user = socketClient.getUser();
 
 
-        logout = findViewById(R.id.logout);
+        //logout = findViewById(R.id.logout);
         train = findViewById(R.id.train);
         adventure = findViewById(R.id.adventure);
         raid = findViewById(R.id.raid);
@@ -85,7 +86,7 @@ public class MainActivity extends FragmentActivity {
 
         Log.i("mainactivity user info",user.toString());
 
-        logout = findViewById(R.id.logout);
+        //logout = findViewById(R.id.logout);
         train = findViewById(R.id.train);
         adventure = findViewById(R.id.adventure);
         raid = findViewById(R.id.raid);
@@ -107,6 +108,7 @@ public class MainActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
 
+        /*
         logout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,10 +122,11 @@ public class MainActivity extends FragmentActivity {
                 });
             }
         });
+         */
         train.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "트레인 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "트레인 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 transaction.replace(R.id.fragment_main,fragment1);
@@ -133,7 +136,7 @@ public class MainActivity extends FragmentActivity {
         raid.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "레이드 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "레이드 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 transaction.replace(R.id.fragment_main,fragment3);
@@ -143,7 +146,7 @@ public class MainActivity extends FragmentActivity {
         adventure.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "어드벤처 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "어드벤처 버튼 클릭됨.", Toast.LENGTH_SHORT).show();
                 onFragmentChange(frag);
 //                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //                transaction.replace(R.id.fragment_main,fragment2);
@@ -184,7 +187,7 @@ public class MainActivity extends FragmentActivity {
     }
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
+        //setResult(RESULT_OK);
         exitGame();
     }
     @Override
