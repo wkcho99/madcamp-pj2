@@ -122,11 +122,17 @@ public class RaidActivity extends Fragment {
                     String each_name;
                     int user_guild = user.getGuild()-1;
                     Log.i("user guild name", ((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").length()+"");
+                    guild_member.clear();
                     for(int i = 0; i < ((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").length();i++){
                         each_name = ((JSONObject)((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").get(i)).getString("name");
                         each_damage=((JSONObject)((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").get(i)).getInt("damage");
-                        guild_member.put(each_name,each_damage);
-                        Log.i("raid guild_member", ""+ each_name + each_damage);
+                        if(guild_member.containsKey(each_name))
+                            guild_member.put(each_name+i,each_damage);
+                        else
+                            guild_member.put(each_name,each_damage);
+
+                        Log.i("raid guild_member", ""+ each_name + each_damage + guild_member.entrySet().toString());
+
                     }
                     list_entries2 = new ArrayList<Map.Entry<String, Integer>>(guild_member.entrySet());
                     Collections.sort(list_entries2, new Comparator<Map.Entry<String, Integer>>() {

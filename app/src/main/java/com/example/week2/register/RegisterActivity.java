@@ -72,7 +72,7 @@ public class RegisterActivity extends Activity{
 
         vp.setAdapter(PagerAdapter);
         vp.setClipToPadding(false);
-        vp.setPadding(250, 0, 250, 0);
+        vp.setPadding(200, 0, 200, 0);
         vp.setPageMargin(100);
         vp.setCurrentItem(Integer.MAX_VALUE/2);
         registerPokemon.setText(pagerArr.get((Integer.MAX_VALUE/2)%3).getName());

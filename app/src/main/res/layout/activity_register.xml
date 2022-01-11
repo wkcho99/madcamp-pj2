@@ -1,101 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/raid_back2"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20sp"
-        android:weightSum="5">
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="이름"/>
-
-        <EditText
-            android:id="@+id/registerName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2" />
-
-    </LinearLayout>
+        android:layout_height="150sp"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20sp"
-        android:weightSum="5">
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="분반"/>
-
-        <Spinner
-            android:id="@+id/registerClass"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20sp"
-        android:weightSum="5">
-
-        <TextView
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="포켓몬"/>
-
-        <TextView
-            android:id="@+id/registerPokemon"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="불꽃숭이"
-            android:layout_weight="2" />
-
-    </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/registerPager"
+        android:layout_gravity="center"
         android:layout_width="300sp"
-        android:layout_height="250sp"
-        android:layout_gravity="center"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20sp"
-        android:gravity="center"
-        android:weightSum="5">
+        android:orientation="vertical"
+        android:background="@drawable/round_bg">
 
-
-
-        <Button
-            android:id="@+id/registerOK"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="회원가입"
-            android:layout_weight="2" />
+            android:gravity="center"
+            android:textSize="30sp"
+            android:layout_margin="10sp"
+            android:fontFamily="@font/pokemon_font"
+            android:textColor="@color/black"
+            android:text="회원가입"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10sp"
+            android:weightSum="5"
+            android:gravity="center">
+
+            <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/pokemon_font"
+                android:text="이름" />
+
+
+
+            <EditText
+                android:id="@+id/registerName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pokemon_font"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10sp"
+            android:weightSum="5"
+            android:gravity="center">
+
+
+        <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/pokemon_font"
+                android:text="분반"/>
+
+            <Spinner
+                android:id="@+id/registerClass"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pokemon_font"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10sp"
+            android:weightSum="5"
+            android:gravity="center">
+
+
+        <TextView
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/pokemon_font"
+                android:text="포켓몬"/>
+
+            <TextView
+                android:id="@+id/registerPokemon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pokemon_font"
+                android:text="불꽃숭이"
+                android:textSize="20sp"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/registerPager"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10sp"
+            android:gravity="center"
+            android:weightSum="5">
+
+            <Button
+                android:id="@+id/registerOK"
+                android:layout_width="0dp"
+                android:layout_height="50sp"
+                android:background="@drawable/item_back"
+                android:fontFamily="@font/pokemon_font"
+                android:text="GO"
+                android:layout_weight="2" />
+
+        </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="100sp"/>
 
 </LinearLayout>
 
