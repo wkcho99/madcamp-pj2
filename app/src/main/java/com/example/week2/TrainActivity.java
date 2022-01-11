@@ -158,6 +158,8 @@ public class TrainActivity extends Fragment {
                     while(newExp >= Math.pow(user.getPoke().level,2)*100) {
                         newExp -= Math.pow(user.getPoke().level, 2) * 100;
                         user.getPoke().setLevel(user.getPoke().getLevel() + 1);
+                        mAdapter.updateLevle(user.getPoke().getLevel());
+                        mAdapter.notifyDataSetChanged();
 
                         if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
                             user.getPoke().setNumber(user.getPoke().getNumber() + 1);

@@ -89,6 +89,10 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
 
         return viewHolder;
     }
+
+    public void updateLevle(int level){
+        this.level = level;
+    }
     /* Called when notifyItemChanged */
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder viewholder, int position) {
@@ -97,8 +101,11 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
         viewholder.name.setText(data.getName());
         viewholder.level.setText("LV."+Integer.toString(data.getLevel()));
 
-        if(Math.pow((position+1),2)>level){
+        if(Math.pow((position+1),2)>level) {
             viewholder.bt.setVisibility(View.INVISIBLE);
+        }else{
+            viewholder.bt.setVisibility(View.VISIBLE);
+
         }
 
         Log.i("viewholder:",data.getName()+data.getLevel());
