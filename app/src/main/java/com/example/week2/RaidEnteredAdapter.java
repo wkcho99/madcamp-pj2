@@ -20,11 +20,13 @@ public class RaidEnteredAdapter extends RecyclerView.Adapter<RaidEnteredAdapter.
     private ArrayList<Skill> mList;
     private Context context;
     private User user;
+    private int color;
     static private OnItemClickListener3 mListener = null;
 
-    public RaidEnteredAdapter(Context context, ArrayList<Skill> list) {
+    public RaidEnteredAdapter(Context context, ArrayList<Skill> list, int color) {
         this.context = context;
         this.mList = list;
+        this.color = color;
     }
 
     public interface OnItemClickListener3 {
@@ -82,6 +84,13 @@ public class RaidEnteredAdapter extends RecyclerView.Adapter<RaidEnteredAdapter.
                 .inflate(R.layout.skill_list, viewGroup, false);
 
         RaidEnteredAdapter.CustomViewHolder viewHolder = new RaidEnteredAdapter.CustomViewHolder(view);
+
+        if(color == 0)
+            view.setBackgroundResource(R.drawable.grass_back);
+        else if(color == 1)
+            view.setBackgroundResource(R.drawable.fire_back);
+        else
+            view.setBackgroundResource(R.drawable.water_back);
         return viewHolder;
     }
 

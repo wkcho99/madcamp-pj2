@@ -22,10 +22,12 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
     private ArrayList <Skill> mList;
     private Context context;
     private User user;
+    private int color;
     static private OnItemClickListener mListener = null;
-    public TrainAdapter(Context context, ArrayList<Skill> list) {
+    public TrainAdapter(Context context, ArrayList<Skill> list, int color) {
         this.context = context;
         this.mList = list;
+        this.color = color;
     }
     public interface OnItemClickListener {
         void onUpClick(View v, int position);
@@ -70,6 +72,12 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
                 .inflate(R.layout.skill_list, viewGroup, false);
 
         CustomViewHolder viewHolder = new CustomViewHolder(view);
+        if(color == 0)
+            view.setBackgroundResource(R.drawable.grass_back);
+        else if(color == 1)
+            view.setBackgroundResource(R.drawable.fire_back);
+        else
+            view.setBackgroundResource(R.drawable.water_back);
         return viewHolder;
     }
     /* Called when notifyItemChanged */

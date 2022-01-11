@@ -109,7 +109,7 @@ public class TrainActivity extends Fragment {
         context = getActivity();
         contentResolver = getActivity().getContentResolver();
 
-        mAdapter = new TrainAdapter(context, addrList);
+        mAdapter = new TrainAdapter(context, addrList, (user.getPoke().getNumber()-1)/3);
         final Animation skillupanim = AnimationUtils.loadAnimation(context,R.anim.skill_level_up);
         mGridManager = new GridLayoutManager(context, 2);
         mRecyclerView = view.findViewById(R.id.recyclerview_list);

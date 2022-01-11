@@ -20,10 +20,12 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
     private ArrayList<Skill> mList;
     private Context context;
     private User user;
+    private int color;
     static private OnItemClickListener2 mListener = null;
-    public AdventureAdapter(Context context, ArrayList<Skill> list) {
+    public AdventureAdapter(Context context, ArrayList<Skill> list, int color) {
         this.context = context;
         this.mList = list;
+        this.color = color;
     }
     public interface OnItemClickListener2 {
         void onUpClick2(View v, int position);
@@ -41,6 +43,14 @@ public class AdventureAdapter extends RecyclerView.Adapter<AdventureAdapter.Cust
             this.name = view.findViewById(R.id.skill_name);
             this.level = view.findViewById(R.id.skill_level);
             this.bt = view.findViewById(R.id.skillcost);
+
+            if(color == 0)
+                view.setBackgroundResource(R.drawable.grass_back);
+            else if(color == 1)
+                view.setBackgroundResource(R.drawable.fire_back);
+            else
+                view.setBackgroundResource(R.drawable.water_back);
+
             int buttonWidth = 200;
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) bt.getLayoutParams();
             params.width = buttonWidth;

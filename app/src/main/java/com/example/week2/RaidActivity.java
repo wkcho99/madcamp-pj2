@@ -47,6 +47,7 @@ public class RaidActivity extends Fragment {
     Map<String,Integer> every_guild = new HashMap<>();
     List<Map.Entry<String, Integer>> list_entries;
     List<Map.Entry<String, Integer>> list_entries2;
+    TextView inclass;
     private RecyclerView mRecyclerView1;
     private RecyclerView mRecyclerView2;
     private LinearLayoutManager mLayoutManager1;
@@ -122,6 +123,7 @@ public class RaidActivity extends Fragment {
                     String each_name;
                     int user_guild = user.getGuild()-1;
                     Log.i("user guild name", ((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").length()+"");
+                    inclass.setText(user.getGuild() + "분반 내 순위");
                     guild_member.clear();
                     for(int i = 0; i < ((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").length();i++){
                         each_name = ((JSONObject)((JSONObject)liveData.getValue().get(user_guild)).getJSONArray("users").get(i)).getString("name");
@@ -190,6 +192,7 @@ public class RaidActivity extends Fragment {
         mRecyclerView2.setAdapter(mAdapter2);
         mRecyclerView2.setHasFixedSize(true);
         mRecyclerView2.setLayoutManager(mLayoutManager2);
+        inclass = view.findViewById(R.id.inclassRanking);
         DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(mRecyclerView2.getContext(),
                 mLayoutManager2.getOrientation());
         mRecyclerView2.addItemDecoration(dividerItemDecoration);

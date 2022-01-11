@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/raid_back2"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="150sp"/>
+        android:layout_height="100sp"/>
 
     <LinearLayout
         android:layout_gravity="center"
@@ -25,9 +24,8 @@
             android:gravity="center"
             android:textSize="30sp"
             android:layout_margin="10sp"
-            android:fontFamily="@font/pokemon_font"
             android:textColor="@color/black"
-            android:text="회원가입"/>
+            android:text="자네는 누구인가?"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +40,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/pokemon_font"
                 android:text="이름" />
 
 
@@ -51,7 +48,6 @@
                 android:id="@+id/registerName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/pokemon_font"
                 android:layout_weight="2" />
 
         </LinearLayout>
@@ -70,14 +66,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/pokemon_font"
                 android:text="분반"/>
 
             <Spinner
                 android:id="@+id/registerClass"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/pokemon_font"
                 android:layout_weight="2" />
 
         </LinearLayout>
@@ -96,14 +90,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/pokemon_font"
                 android:text="포켓몬"/>
 
             <TextView
                 android:id="@+id/registerPokemon"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/pokemon_font"
                 android:text="불꽃숭이"
                 android:textSize="20sp"
                 android:layout_weight="2" />
@@ -128,8 +120,7 @@
                 android:id="@+id/registerOK"
                 android:layout_width="0dp"
                 android:layout_height="50sp"
-                android:background="@drawable/item_back"
-                android:fontFamily="@font/pokemon_font"
+                android:background="@drawable/button1"
                 android:text="GO"
                 android:layout_weight="2" />
 

@@ -65,7 +65,7 @@ public class AdventureActivity2 extends Fragment {
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }
-        mAdapter = new AdventureAdapter(context, addrList);
+        mAdapter = new AdventureAdapter(context, addrList, (user.getPoke().getNumber()-1)/3);
         mediaPlayer = MediaPlayer.create(getActivity(), R.raw.battle);
         if(mediaPlayer!=null){
             mediaPlayer.setLooping(true);
