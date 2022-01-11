@@ -3,6 +3,7 @@ package com.example.week2;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,15 +37,20 @@ public class LoginActivity extends Activity {
     ServerThread thread;
     Profile profile;
     String kakaoId;
+    MediaPlayer mediaPlayer;
     private AnimationDrawable animationDrawable;
     //ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mediaPlayer = MediaPlayer.create(this, R.raw.intro);
         setContentView(R.layout.login_activity);
         viewInit();
-
+        if(mediaPlayer!=null){
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
         socketClient = (SocketClient) getApplicationContext();
 
         kakaoTalkLogin.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +151,12 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
+        if(mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
 
@@ -154,11 +165,27 @@ public class LoginActivity extends Activity {
         ll.setVisibility(View.INVISIBLE);
         if(code == 0) {
             // game start
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+            }
+            if(mediaPlayer != null) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
         } else if(code == 1){
             // register
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+            }
+            if(mediaPlayer != null) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             intent.putExtra("userName", profile.getNickname());
             intent.putExtra("kakaoId", kakaoId);

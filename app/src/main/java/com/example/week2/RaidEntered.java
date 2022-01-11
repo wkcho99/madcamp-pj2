@@ -2,6 +2,7 @@ package com.example.week2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -52,7 +53,7 @@ public class RaidEntered extends Activity {
     public Integer is_raid;
     ProgressBar prog;
     private int raid_cnt;
-
+    MediaPlayer mediaPlayer;
     MutableLiveData<Integer> bossHp;
 
     private void updateData(){
@@ -75,8 +76,12 @@ public class RaidEntered extends Activity {
     public void onResume() {
         raid_hp = getIntent().getIntExtra("raid_hp", 10000);
         Log.i("resume hp", ""+raid_hp);
-
         super.onResume();
+//        mediaPlayer = MediaPlayer.create(this, R.raw.raid);
+//        if(mediaPlayer!=null){
+//            mediaPlayer.setLooping(true);
+//            mediaPlayer.start();
+//        }
         prog = findViewById(R.id.progressBar3);
         prog.setProgress(raid_hp);
         updateData();
@@ -97,12 +102,17 @@ public class RaidEntered extends Activity {
         for (int i = 0; i < user.getPoke().getSkills().size(); i++) {
             addrList.add(user.getPoke().getSkills().get(i));
         }
-        mAdapter = new RaidEnteredAdapter(context, addrList);
+        mAdapter = new RaidEnteredAdapter(this, addrList);
+        mediaPlayer = MediaPlayer.create(this, R.raw.raid);
+        if(mediaPlayer!=null){
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
         //raid_hp set
         Log.i("raid", ""+raid_hp + " " + user.getPoke().getSkills().get(0).getDamage());
         setContentView(R.layout.raid_entered);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        mGridManager = new GridLayoutManager(context, 2);
+        mGridManager = new GridLayoutManager(this, 2);
         mRecyclerView = findViewById(R.id.recyclerview_list3);
         ImageView raid_back = findViewById(R.id.raid_back);
         ImageView boss = findViewById(R.id.boss);
@@ -143,33 +153,49 @@ public class RaidEntered extends Activity {
                 else if((raid_hp-attack)<=0)
                 {
                     //몬스터 죽음
+                    if(mediaPlayer != null) {
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.stop();
+                            mediaPlayer.reset();
+                        }
+                        if (mediaPlayer != null) {
+                            mediaPlayer.release();
+                            mediaPlayer = null;
+                        }
+                    }
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.victory);
+                    if(mediaPlayer!=null){
+                        mediaPlayer.setLooping(true);
+                        mediaPlayer.start();
+                    }
                     boss.startAnimation(die);
                     prog.setProgress(0);
                     raid_hp = 0;
-                    Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
+                    Long newcoin = user.getCoin() + user.getPoke().getLevel()*50;
                     damage += raid_hp-attack;
                     user.setRaid_times(raid_cnt-1);
                     user.setCoin(newcoin);
                     user.getPoke().getSkills().get(position).setSkillcoin();
-                    long newExp = user.getPoke().getExp()+user.poke.level*19;
+                    long newExp = user.getPoke().getExp()+user.poke.level*100;
                     ////다음으로
-                    narr.setText("디아루가를 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ ","+user.poke.level*19+" 경험치 획득");
+                    narr.setText("디아루가를 처치했다!" + "\n"+user.getPoke().getLevel()*50+" 코인 획득"+ ","+user.poke.level*100+" 경험치 획득");
+                    int up = 0;
                     if(newExp >= Math.pow(user.getPoke().level,2)*100){
-                        while(newExp >= Math.pow(user.getPoke().level,2)*100) {
-
-                            newExp -= Math.pow(user.getPoke().level, 2) * 100;
-                            user.getPoke().setLevel(user.getPoke().getLevel() + 1);
-                            narr.setText("포켓몬의 레벨이 상승했다!");
-                            if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
-                                user.getPoke().setNumber(user.getPoke().getNumber() + 1);
-                                narr.setText("포켓몬의 레벨이 상승했다!"+"포켓몬이 진화했다!");
-                                Log.i("evolution", "" + user.getPoke().getNumber());
-                            }
-
+                    while(newExp >= Math.pow(user.getPoke().level,2)*100) {
+                        up++;
+                        newExp -= Math.pow(user.getPoke().level, 2) * 100;
+                        user.getPoke().setLevel(user.getPoke().getLevel() + 1);
+                        narr.setText("포켓몬의 레벨이 "+up+"만큼 상승했다!");
+                        if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
+                            user.getPoke().setNumber(user.getPoke().getNumber() + 1);
+                            narr.setText("포켓몬의 레벨이 "+up+"만큼 상승했다!"+"포켓몬이 진화했다!");
+                            Log.i("evolution", "" + user.getPoke().getNumber());
                         }
+
                     }
+                }
                     user.getPoke().setExp(newExp);
-                    user.getPoke().setExp(newExp);
+
 //                    TextView coinview = findViewById(R.id.coin);
 //                    coinview.setText(""+newcoin);
 //                    TextView expView = findViewById(R.id.exp);
@@ -187,11 +213,21 @@ public class RaidEntered extends Activity {
                         @Override
                         public void run() {
                             if(getApplicationContext() != null){
+                                if(mediaPlayer != null) {
+                                    if (mediaPlayer.isPlaying()) {
+                                        mediaPlayer.stop();
+                                        mediaPlayer.reset();
+                                    }
+                                    if (mediaPlayer != null) {
+                                        mediaPlayer.release();
+                                        mediaPlayer = null;
+                                    }
+                                }
                                 //boss.setVisibility(View.INVISIBLE);
                                 finish();
                             }
                         }
-                    }, 900);
+                    }, 1000);
                     return;
                 }
                 else {
@@ -213,8 +249,38 @@ public class RaidEntered extends Activity {
             public void run() {
                 if(getApplicationContext() != null){
                     //boss.setVisibility(View.INVISIBLE);
+                    if(mediaPlayer != null) {
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.stop();
+                            mediaPlayer.reset();
+                        }
+                        if (mediaPlayer != null) {
+                            mediaPlayer.release();
+                            mediaPlayer = null;
+                        }
+                    }
                     user.setRaid_times(raid_cnt-1);
-                    narr.setText("총 "+damage+"의 데미지를 입혔다!");
+                    Long newcoin = user.getCoin() + user.getPoke().getLevel()*50;
+                    user.setRaid_times(raid_cnt-1);
+                    user.setCoin(newcoin);
+                    long newExp = user.getPoke().getExp()+user.poke.level*100;
+                    narr.setText("총 "+damage+"의 데미지를 입혔다!" + "\n"+user.getPoke().getLevel()*50+" 코인 획득"+ ","+user.poke.level*100+" 경험치 획득");
+                    int up = 0;
+                    if(newExp >= Math.pow(user.getPoke().level,2)*100){
+                        while(newExp >= Math.pow(user.getPoke().level,2)*100) {
+                            up++;
+                            newExp -= Math.pow(user.getPoke().level, 2) * 100;
+                            user.getPoke().setLevel(user.getPoke().getLevel() + 1);
+                            narr.setText("포켓몬의 레벨이 "+up+"만큼 상승했다!");
+                            if ((user.getPoke().getLevel() == 3) || (user.getPoke().getLevel() == 5)) {
+                                user.getPoke().setNumber(user.getPoke().getNumber() + 1);
+                                narr.setText("포켓몬의 레벨이 "+up+"만큼 상승했다!"+"포켓몬이 진화했다!");
+                                Log.i("evolution", "" + user.getPoke().getNumber());
+                            }
+
+                        }
+                    }
+                    user.getPoke().setExp(newExp);
                     socketClient.sendRaidDamage(damage);
 
                     socketClient.getUser().setRaid_damage(socketClient.getUser().getRaid_damage() + damage);
@@ -227,6 +293,7 @@ public class RaidEntered extends Activity {
     }
     @Override
     public void onBackPressed() {
+
         exitRaid();
     }
     public void exitRaid(){
@@ -235,6 +302,16 @@ public class RaidEntered extends Activity {
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if(mediaPlayer != null) {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                    }
+                    if (mediaPlayer != null) {
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                }
                 RaidEntered.super.onBackPressed();
                 finish();
                 //socketClient.
