@@ -196,7 +196,7 @@ public class TrainActivity extends Fragment {
         String msg;
         Skill s = mAdapter.getItem(position);
         msg = "스킬명: "+s.getName()+"\n"+"쿨타임: "+ s.getCool()+"\n"+
-                "배우는데 필요한 레벨"+Math.pow(s.getId(),2)+"\n"+"현재 데미지: "+s.getDamage()+"\n"
+                "배우는데 필요한 레벨: "+(int)Math.pow(position+1,2)+"\n"+"현재 데미지: "+s.getDamage()+"\n"
                 +"현재 레벨업 시 필요한 코인: "+s.getSkillcoin()+"\n"+"스킬 레벨업 시 데미지: +"+s.getId();
 
         new AlertDialog.Builder(view.getContext())
