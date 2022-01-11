@@ -171,7 +171,6 @@ public class RaidEntered extends Activity {
                     damage += raid_hp-attack;
                     user.setRaid_times(raid_cnt-1);
                     user.setCoin(newcoin);
-                    user.getPoke().getSkills().get(position).setSkillcoin();
                     long newExp = user.getPoke().getExp()+user.poke.level*100;
                     ////다음으로
                     narr.setText("디아루가를 처치했다!" + "\n"+user.getPoke().getLevel()*50+" 코인 획득"+ ","+user.poke.level*100+" 경험치 획득");
