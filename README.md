@@ -26,6 +26,9 @@ Raid에서는 분반 별로 보스 몬스터를 같이 사냥하면서 경쟁하
 
 ### Backend
 
+NodeJS를 이용하여 Express와 [socket.IO]("https://https://socket.io/")를 이용하여 구축.
+데이터베이스는 mysql을 이용하여 
+
 
 ### Frontend
 
