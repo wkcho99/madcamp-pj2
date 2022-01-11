@@ -108,6 +108,7 @@ public class TrainActivity extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         context = getActivity();
         contentResolver = getActivity().getContentResolver();
+
         mAdapter = new TrainAdapter(context, addrList);
         final Animation skillupanim = AnimationUtils.loadAnimation(context,R.anim.skill_level_up);
         mGridManager = new GridLayoutManager(context, 2);
@@ -140,12 +141,15 @@ public class TrainActivity extends Fragment {
                 Toast.makeText(view.getContext(), "레벨이 부족합니다. 필요레벨: "+(int)Math.pow((position+1),2), Toast.LENGTH_SHORT).show();
                 return;
             }
+//            if(s.getLevel()>=user.poke.getLevel()){
+//                Toast.makeText(view.getContext(), "스킬은 포켓몬 레벨 이상으로 올릴 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
             if(s.getLevel() == 99){
                 Toast.makeText(view.getContext(), "최대 레벨입니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
             user.setCoin(user.getCoin() - s.getSkillcoin());
-
                 user.getPoke().getSkills().get(position).setDamage(s.getDamage()+position+1);
             user.getPoke().getSkills().get(position).setLevel(s.getLevel()+1);
                 user.getPoke().getSkills().get(position).setSkillcoin();
@@ -189,12 +193,11 @@ public class TrainActivity extends Fragment {
     public void modal(final View view, int position) {
         String msg;
         Skill s = mAdapter.getItem(position);
-        msg = s.getName();
+        msg = "스킬명: "+s.getName()+"\n"+"쿨타임: "+ s.getCool()+"\n"+"현재 데미지: "+s.getDamage()+"\n"+"현재 레벨업 시 필요한 코인: "+s.getSkillcoin()+"\n"+"스킬 레벨업 시 데미지: +"+s.getId();
 
         new AlertDialog.Builder(view.getContext())
                 .setTitle("스킬 정보")
                 .setMessage(msg)
-
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

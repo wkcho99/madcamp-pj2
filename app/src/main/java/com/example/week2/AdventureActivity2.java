@@ -197,11 +197,9 @@ public class AdventureActivity2 extends Fragment {
             {
                 //몬스터 죽음
                 mob_hp = 0;
-                if(mediaPlayer.isPlaying()) {
+                if(mediaPlayer != null && mediaPlayer.isPlaying()) {
                     mediaPlayer.stop();
                     mediaPlayer.reset();
-                }
-                if(mediaPlayer != null) {
                     mediaPlayer.release();
                     mediaPlayer = null;
                 }

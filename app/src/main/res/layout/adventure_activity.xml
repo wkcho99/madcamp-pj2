@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="3">
+        android:weightSum="2">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0sp"
             android:layout_weight="1"
             >
 
@@ -28,7 +28,7 @@
                 android:id="@+id/adventure_poke"
                 android:layout_width="100sp"
                 android:layout_height="100sp"
-                android:layout_marginTop="400dp"
+                android:layout_marginTop="320dp"
                 android:layout_marginLeft="200dp"
                 android:src="@drawable/dot1" />
 
@@ -37,13 +37,14 @@
             <TextView
                 android:id="@+id/searching"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0sp"
                 android:fontFamily="@font/pokemon_font"
                 android:gravity="center"
                 android:text="사냥감 찾는중..."
+                android:background="@drawable/skill_back"
                 android:textAlignment="center"
                 android:textSize="20pt"
-                android:layout_weight="2"/>
+                android:layout_weight="1"/>
 
     <!--        <com.example.week2.GameView-->
         <!--            android:layout_width="match_parent"-->
