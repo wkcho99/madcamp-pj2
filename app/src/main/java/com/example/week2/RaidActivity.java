@@ -198,7 +198,7 @@ public class RaidActivity extends Fragment {
         mRecyclerView2.setAdapter(mAdapter2);
         mRecyclerView2.setHasFixedSize(true);
         mRecyclerView2.setLayoutManager(mLayoutManager2);
-        inclass = view.findViewById(R.id.inclassRanking);
+        inclass = view.findViewById(R.id.rank2);
         DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(mRecyclerView2.getContext(),
                 mLayoutManager2.getOrientation());
         mRecyclerView2.addItemDecoration(dividerItemDecoration);
