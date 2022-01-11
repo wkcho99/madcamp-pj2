@@ -33,7 +33,7 @@ public class Skill implements Serializable {
     }
 
     public void setSkillcoin() {
-        this.skillcoin =(this.id%10)*this.level;
+        this.skillcoin =(this.id%8)*this.level;
     }
 
     public Skill(int id, String name, Double cool, int level, int power) {
@@ -44,7 +44,7 @@ public class Skill implements Serializable {
         this.power = power;
         this.skillcoin = 0;
         this.start = (long)0;
-        this.damage = (this.id % 10 ) * (this.level-1) + this.power;
+        this.damage = (this.id % 8 ) * (this.level-1) + this.power;
         setSkillcoin();
     }
 

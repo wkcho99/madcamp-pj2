@@ -139,6 +139,8 @@ public class RaidActivity extends Fragment {
                     cando.setText(user.getRaid_times()+"/3");
                     mAdapter1.setmList(list_entries);
                     mAdapter2.setmList(list_entries2);
+                    mAdapter1.notifyDataSetChanged();
+                    mAdapter2.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
