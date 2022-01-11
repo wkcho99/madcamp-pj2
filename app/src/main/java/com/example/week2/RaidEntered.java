@@ -153,15 +153,11 @@ public class RaidEntered extends Activity {
                 else if((raid_hp-attack)<=0)
                 {
                     //몬스터 죽음
-                    if(mediaPlayer != null) {
-                        if (mediaPlayer.isPlaying()) {
-                            mediaPlayer.stop();
-                            mediaPlayer.reset();
-                        }
-                        if (mediaPlayer != null) {
-                            mediaPlayer.release();
-                            mediaPlayer = null;
-                        }
+                    if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
                     }
                     mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.victory);
                     if(mediaPlayer!=null){
@@ -213,15 +209,11 @@ public class RaidEntered extends Activity {
                         @Override
                         public void run() {
                             if(getApplicationContext() != null){
-                                if(mediaPlayer != null) {
-                                    if (mediaPlayer.isPlaying()) {
-                                        mediaPlayer.stop();
-                                        mediaPlayer.reset();
-                                    }
-                                    if (mediaPlayer != null) {
-                                        mediaPlayer.release();
-                                        mediaPlayer = null;
-                                    }
+                                if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                                    mediaPlayer.stop();
+                                    mediaPlayer.reset();
+                                    mediaPlayer.release();
+                                    mediaPlayer = null;
                                 }
                                 //boss.setVisibility(View.INVISIBLE);
                                 finish();
@@ -249,15 +241,11 @@ public class RaidEntered extends Activity {
             public void run() {
                 if(getApplicationContext() != null){
                     //boss.setVisibility(View.INVISIBLE);
-                    if(mediaPlayer != null) {
-                        if (mediaPlayer.isPlaying()) {
-                            mediaPlayer.stop();
-                            mediaPlayer.reset();
-                        }
-                        if (mediaPlayer != null) {
-                            mediaPlayer.release();
-                            mediaPlayer = null;
-                        }
+                    if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
                     }
                     user.setRaid_times(raid_cnt-1);
                     Long newcoin = user.getCoin() + user.getPoke().getLevel()*50;
@@ -302,15 +290,11 @@ public class RaidEntered extends Activity {
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if(mediaPlayer != null) {
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                        mediaPlayer.reset();
-                    }
-                    if (mediaPlayer != null) {
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
+                if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
                 }
                 RaidEntered.super.onBackPressed();
                 finish();

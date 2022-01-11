@@ -165,24 +165,22 @@ public class LoginActivity extends Activity {
         ll.setVisibility(View.INVISIBLE);
         if(code == 0) {
             // game start
-            if(mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-                mediaPlayer.reset();
+
+            if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
             }
-            if(mediaPlayer != null) {
-                mediaPlayer.release();
-                mediaPlayer = null;
-            }
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
         } else if(code == 1){
             // register
-            if(mediaPlayer.isPlaying()) {
+            if(mediaPlayer != null && mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
-            }
-            if(mediaPlayer != null) {
                 mediaPlayer.release();
                 mediaPlayer = null;
             }

@@ -107,11 +107,10 @@ public class AdventureActivity2 extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(mediaPlayer.isPlaying()) {
+
+        if(mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
-        }
-        if(mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
@@ -120,11 +119,10 @@ public class AdventureActivity2 extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mediaPlayer.isPlaying()) {
+
+        if(mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
-        }
-        if(mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
