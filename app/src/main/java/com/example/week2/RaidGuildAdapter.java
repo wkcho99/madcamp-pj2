@@ -70,7 +70,7 @@ public class RaidGuildAdapter extends RecyclerView.Adapter<RaidGuildAdapter.Cust
         {
             //Log.i("mlist pos & value",mList.get(position).getValue()+","+.getValue());
             int temp = ranks.get(position-1);
-            viewholder.rank.setText(temp+"");
+            viewholder.rank.setText(Integer.toString(temp));
             ranks.add(temp);
         }
         else {
