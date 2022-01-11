@@ -211,7 +211,6 @@ public class AdventureActivity2 extends Fragment {
                 mob.startAnimation(die);
                 Long newcoin = user.getCoin() + user.getPoke().getLevel()*10;
                 user.setCoin(newcoin);
-                user.getPoke().getSkills().get(position).setSkillcoin();
                 long newExp = user.getPoke().getExp()+user.poke.level*19;
                 narr.setText("사냥감을 처치했다!" + "\n"+user.getPoke().getLevel()*10+" 코인 획득"+ ","+user.poke.level*19+" 경험치 획득");
                 if(newExp >= Math.pow(user.getPoke().level,2)*100){

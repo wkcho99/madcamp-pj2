@@ -79,7 +79,7 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
         data = mList.get(position);
         viewholder.name.setText(data.getName());
         viewholder.level.setText("LV."+Integer.toString(data.getLevel()));
-        viewholder.bt.setText("cost: "+data.getSkillcoin()+"\n"+"power: "+data.getDamage());
+        viewholder.bt.setText("cost: "+data.getSkillcoin()+1+"\n"+"power: "+data.getDamage());
         Log.i("viewholder:",data.getName()+data.getLevel());
     }
     @Override
