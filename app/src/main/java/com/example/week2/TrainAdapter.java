@@ -2,6 +2,7 @@ package com.example.week2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Array;
@@ -23,11 +25,14 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
     private Context context;
     private User user;
     private int color;
+    private int level;
+
     static private OnItemClickListener mListener = null;
-    public TrainAdapter(Context context, ArrayList<Skill> list, int color) {
+    public TrainAdapter(Context context, ArrayList<Skill> list, int color, int level) {
         this.context = context;
         this.mList = list;
         this.color = color;
+        this.level = level;
     }
     public interface OnItemClickListener {
         void onUpClick(View v, int position);
@@ -78,6 +83,10 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
             view.setBackgroundResource(R.drawable.fire_back);
         else
             view.setBackgroundResource(R.drawable.water_back);
+
+
+
+
         return viewHolder;
     }
     /* Called when notifyItemChanged */
@@ -87,6 +96,11 @@ public class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.CustomViewHo
         data = mList.get(position);
         viewholder.name.setText(data.getName());
         viewholder.level.setText("LV."+Integer.toString(data.getLevel()));
+
+        if(Math.pow((position+1),2)>level){
+            viewholder.bt.setVisibility(View.INVISIBLE);
+        }
+
         Log.i("viewholder:",data.getName()+data.getLevel());
     }
     @Override

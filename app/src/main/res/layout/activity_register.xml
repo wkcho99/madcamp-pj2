@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="2">
 
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="100sp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_gravity="center"
@@ -22,8 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="30sp"
-            android:layout_margin="10sp"
+            android:textSize="25sp"
+            android:layout_margin="30sp"
             android:textColor="@color/black"
             android:text="자네는 누구인가?"/>
 
@@ -129,7 +131,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="100sp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>
 
