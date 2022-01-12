@@ -84,8 +84,8 @@ public class SocketClient extends Application {
                         user.setRaid_times(data.getInt("raid_cnt"));
                         user.setRaid_damage(data.getInt("raid_damage"));
 
-                        timeReward = (System.currentTimeMillis() - user.getEndTime()) / 60000;
-                        addCoin = Math.min(timeReward * pokemon.getLevel() * 2, 100000);
+                        timeReward = (System.currentTimeMillis() - user.getEndTime()) / 1000;
+                        addCoin = Math.min(timeReward, 100000);
                         user.setCoin(data.getLong("coin")+addCoin);
                         notifyChange();
 

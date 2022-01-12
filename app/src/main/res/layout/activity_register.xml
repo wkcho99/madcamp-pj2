@@ -8,125 +8,132 @@
     android:weightSum="2">
 
 
-    <View
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
     <LinearLayout
-        android:layout_gravity="center"
-        android:layout_width="300sp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/round_bg">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:layout_margin="30sp"
-            android:textColor="@color/black"
-            android:text="자네는 누구인가?"/>
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:background="@drawable/doctor"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10sp"
-            android:weightSum="5"
-            android:gravity="center">
+            android:layout_width="300sp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/round_bg">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_width="0dp"
+                android:textSize="25sp"
+                android:layout_margin="30sp"
+                android:textColor="@color/black"
+                android:text="자네는 누구인가?"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="이름" />
+                android:orientation="horizontal"
+                android:padding="10sp"
+                android:weightSum="5"
+                android:gravity="center">
+
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="이름" />
 
 
 
-            <EditText
-                android:id="@+id/registerName"
-                android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/registerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2" />
+                android:orientation="horizontal"
+                android:padding="10sp"
+                android:weightSum="5"
+                android:gravity="center">
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10sp"
-            android:weightSum="5"
-            android:gravity="center">
-
-
-        <TextView
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="분반"/>
-
-            <Spinner
-                android:id="@+id/registerClass"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10sp"
-            android:weightSum="5"
-            android:gravity="center">
-
-
-        <TextView
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="포켓몬"/>
 
             <TextView
-                android:id="@+id/registerPokemon"
-                android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="분반"/>
+
+                <Spinner
+                    android:id="@+id/registerClass"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="불꽃숭이"
-                android:textSize="20sp"
-                android:layout_weight="2" />
+                android:orientation="horizontal"
+                android:padding="10sp"
+                android:weightSum="5"
+                android:gravity="center">
 
+
+            <TextView
+                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="포켓몬"/>
+
+                <TextView
+                    android:id="@+id/registerPokemon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="불꽃숭이"
+                    android:textSize="20sp"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/registerPager"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10sp"
+                android:gravity="center"
+                android:weightSum="5">
+
+                <Button
+                    android:id="@+id/registerOK"
+                    android:layout_width="0dp"
+                    android:layout_height="50sp"
+                    android:background="@drawable/button1"
+                    android:text="GO"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
         </LinearLayout>
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/registerPager"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10sp"
-            android:gravity="center"
-            android:weightSum="5">
-
-            <Button
-                android:id="@+id/registerOK"
-                android:layout_width="0dp"
-                android:layout_height="50sp"
-                android:background="@drawable/button1"
-                android:text="GO"
-                android:layout_weight="2" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <View
